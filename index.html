@@ -1513,6 +1513,10 @@ margin-bottom: 12px;
 background: #FFFFFF;
 }
 .delivery-item header-row { display: flex; }
+.api-status { font-size: 0.85rem; color: #6B5F57; margin: 8px 0 0; }
+.api-status[hidden] { display: none; }
+.api-status.error { color: #9A3520; }
+.btn-main[disabled], .btn-small[disabled] { opacity: 0.6; cursor: progress; }
 .delivery-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; }
 .action-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .btn-small {
@@ -1611,6 +1615,7 @@ cursor: pointer; font-family: var(--font-body);
 <p style="margin: 6px 0 0;">Confira o código enviado pelo Bruno no WhatsApp.</p>
 </div>
 
+<div class="api-status" id="trackStatus" role="status" hidden></div>
 <div class="result" id="resultBox" hidden aria-live="polite">
 <div class="result-grid">
 <div>
@@ -1821,6 +1826,7 @@ cursor: pointer; font-family: var(--font-body);
 
 <h3 style="font-size: 1.1rem; margin: 22px 0 4px;">Entregas registradas</h3>
 <p class="helper" style="margin-bottom: 12px;">Atualize a etapa e, se quiser, adicione uma observação.</p>
+<div class="api-status" id="adminStatus" role="status" hidden></div>
 <div id="deliveryList"></div>
 
 <div class="row gap-2 mt-3" style="flex-wrap: wrap;">
@@ -1839,34 +1845,83 @@ cursor: pointer; font-family: var(--font-body);
 (function () {
 var STEPS = ["Coletado", "Em rota", "Saiu para entrega", "Entregue"];
 var ADMIN_PASS = "bruno2026";
+var API = "https://script.google.com/macros/s/AKfycbyp1USuNkoTOiYn4Io4F9gL3HBuc14EIA5WhQ03LxiFOX6pQvKS1lxULY5Rl0s8yVAy/exec";
+var TIMEOUT_MS = 15000;
+var MSG_NET = "Não foi possível consultar agora. Tente novamente em instantes.";
+var sessionStore = window.skipStore("bruninho-admin-session", { auth: false });
+var cache = [];
 
-var deliveriesStore = window.skipStore("bruninho-entregas-v1", [
-{
-code: "BL-1042", destinatario: "Farmácia São João", endereco: "Centro, Indaiatuba", cidade: "Indaiatuba",
-volume: "Documentos e exames", previsao: "2026-11-23", stage: 3,
-history: [
-{ label: "Coletado", date: "23/11/2026", time: "09:12", note: "Coletado na farmácia, envelope lacrado." },
-{ label: "Em rota", date: "23/11/2026", time: "09:40", note: "Saindo do centro para a entrega." },
-{ label: "Saiu para entrega", date: "23/11/2026", time: "09:55", note: "Entrega em andamento." },
-{ label: "Entregue", date: "23/11/2026", time: "10:05", note: "Recebido por Carla, recepção." }
-]
-},
-{
-code: "BL-1043", destinatario: "Escritório Contábil Almeida", endereco: "Cidade Nova, Indaiatuba", cidade: "Indaiatuba",
-volume: "Malote de documentos", previsao: "2026-11-24", stage: 1,
-history: [
-{ label: "Coletado", date: "24/11/2026", time: "08:30", note: "Malote coletado no escritório." },
-{ label: "Em rota", date: "24/11/2026", time: "09:15", note: "Trajeto pela Av. Presidente Vargas." }
-]
-},
-{
-code: "BL-1044", destinatario: "Distribuidora Vale Verde", endereco: "Jardim Morada do Sol, Indaiatuba", cidade: "Indaiatuba",
-volume: "Pequeno volume, 2 kg", previsao: "2026-11-24", stage: 0,
-history: [
-{ label: "Coletado", date: "24/11/2026", time: "11:40", note: "Volume conferido e etiquetado." }
-]
+function fetchJson(url, opts) {
+var ctrl = new AbortController();
+var timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS);
+var o = Object.assign({ signal: ctrl.signal }, opts || {});
+return fetch(url, o).then(function (r) {
+if (!r.ok) throw new Error("http " + r.status);
+return r.json();
+}).finally(function () { clearTimeout(timer); });
 }
-]);
+
+function apiListar() {
+return fetchJson(API + "?acao=listar").then(function (data) {
+cache = Array.isArray(data) ? data : [];
+return cache;
+});
+}
+
+function apiBuscar(codigo) {
+return fetchJson(API + "?acao=buscar&codigo=" + encodeURIComponent(codigo)).then(function (data) {
+if (data && data.erro) return null;
+return data;
+});
+}
+
+function apiPost(payload) {
+return fetchJson(API, {
+method: "POST",
+headers: { "Content-Type": "text/plain;charset=utf-8" },
+body: JSON.stringify(payload)
+}).then(function (data) {
+if (data && data.ok === false) throw new Error(data.erro || "falha");
+return data;
+});
+}
+
+function apiCriar(obj) {
+return apiPost(Object.assign({ acao: "criar" }, obj));
+}
+
+function apiAtualizar(obj) {
+return apiPost(Object.assign({ acao: "atualizar" }, obj));
+}
+
+function setBusy(btn, busy, labelBusy) {
+if (!btn) return;
+if (busy) {
+btn.dataset.label = btn.dataset.label || btn.textContent;
+btn.textContent = labelBusy || "Aguarde...";
+btn.disabled = true;
+} else {
+if (btn.dataset.label) btn.textContent = btn.dataset.label;
+btn.disabled = false;
+}
+}
+
+function setStatus(id, msg, isError) {
+var n = document.getElementById(id);
+if (!msg) { n.hidden = true; n.textContent = ""; n.classList.remove("error"); return; }
+n.hidden = false;
+n.textContent = msg;
+n.classList.toggle("error", !!isError);
+}
+
+function nextCodeFrom(list) {
+var max = 1044;
+list.forEach(function (d) {
+var n = parseInt(String(d.codigo).replace("BL-", ""), 10);
+if (!isNaN(n) && n > max) max = n;
+});
+return "BL-" + (max + 1);
+}
 
 function el(tag, cls, text) {
 var n = document.createElement(tag);
@@ -1881,12 +1936,18 @@ var p = iso.split("-");
 return p[2] + "/" + p[1] + "/" + p[0];
 }
 
-function findDelivery(code) {
-var list = deliveriesStore.get() || [];
-for (var i = 0; i < list.length; i++) {
-if (list[i].code.toUpperCase() === String(code).trim().toUpperCase()) return list[i];
-}
-return null;
+function adaptDelivery(d) {
+var hist = Array.isArray(d.historico) ? d.historico : [];
+var history = hist.map(function (h) {
+return { label: h.etapa, date: h.data || "", time: "", note: h.obs || "" };
+});
+var stage = STEPS.indexOf(d.etapa);
+if (stage < 0) stage = 0;
+return {
+code: d.codigo, destinatario: d.destinatario || "", endereco: d.endereco || "",
+cidade: d.cidade || "", volume: d.volume || "", previsao: d.previsao || "",
+observacao: d.observacao || "", stage: stage, history: history
+};
 }
 
 function renderResult(d) {
@@ -1899,8 +1960,11 @@ document.getElementById("resStatus").textContent = STEPS[d.stage];
 
 var tl = document.getElementById("timeline");
 tl.replaceChildren();
+var lastIdx = d.history.length - 1;
 STEPS.forEach(function (label, i) {
-var cls = i < d.stage ? "done" : (i === d.stage ? "current" : "pending");
+var done = d.history.some(function (h) { return h.label === label; });
+var cls = done ? "done" : "pending";
+if (done && d.history[lastIdx] && d.history[lastIdx].label === label) cls = "current";
 var li = el("li", "step " + cls);
 var icon = el("div", "step-icon");
 icon.setAttribute("aria-hidden", "true");
@@ -1913,7 +1977,7 @@ var body = el("div");
 body.appendChild(el("p", "step-title", label));
 var h = d.history.filter(function (x) { return x.label === label; })[0];
 if (h) {
-body.appendChild(el("p", "step-meta", h.date + " às " + h.time));
+body.appendChild(el("p", "step-meta", h.time ? h.date + " às " + h.time : h.date));
 body.appendChild(el("p", "step-note", h.note));
 } else {
 body.appendChild(el("p", "step-meta", "Aguardando"));
@@ -1957,16 +2021,27 @@ document.getElementById("resultBox").hidden = true;
 document.getElementById("notFound").hidden = false;
 }
 
-function runTrack(code) {
-var d = findDelivery(code);
-if (d) {
-renderResult(d);
+function runTrack(code, btn) {
+var c = String(code).trim();
+if (!c) return;
+document.getElementById("notFound").hidden = true;
+setStatus("trackStatus", "", false);
+setBusy(btn, true, "Buscando...");
+apiBuscar(c).then(function (data) {
+if (data) {
+renderResult(adaptDelivery(data));
 } else {
 showNotFound();
 }
+}).catch(function () {
+document.getElementById("resultBox").hidden = true;
+document.getElementById("notFound").hidden = true;
+setStatus("trackStatus", MSG_NET, true);
+}).finally(function () {
+setBusy(btn, false);
+});
 }
 
-// Tracking form
 document.getElementById("trackForm").addEventListener("submit", function (e) {
 e.preventDefault();
 var code = document.getElementById("trackCode").value;
@@ -1975,7 +2050,7 @@ window.skipUI.toast("Digite um código de rastreio para continuar.", { type: "er
 showNotFound();
 return;
 }
-runTrack(code);
+runTrack(code, this.querySelector('button[type="submit"]'));
 });
 
 document.getElementById("shortcutBtn").addEventListener("click", function () {
@@ -1998,13 +2073,12 @@ revealEls.forEach(function (n) { n.classList.add("visible"); });
 
 // Admin dialog
 var dialog = document.getElementById("adminDialog");
-var sessionStore = window.skipStore("bruninho-admin-session", { auth: false });
 
 function setAdminView() {
 var authed = sessionStore.get().auth === true;
 document.getElementById("loginSection").hidden = authed;
 document.getElementById("panelSection").hidden = !authed;
-if (authed) renderAdmin();
+if (authed) refreshAdmin();
 }
 
 document.getElementById("openAdmin").addEventListener("click", function () {
@@ -2037,18 +2111,21 @@ setAdminView();
 window.skipUI.toast("Você saiu da Área do Bruno.");
 });
 
-function nextCode() {
-var max = 1042;
-(deliveriesStore.get() || []).forEach(function (d) {
-var n = parseInt(d.code.replace("BL-", ""), 10);
-if (!isNaN(n) && n > max) max = n;
+function refreshAdmin() {
+setStatus("adminStatus", "Carregando entregas...", false);
+return apiListar().then(function () {
+setStatus("adminStatus", "", false);
+renderAdmin();
+}).catch(function () {
+setStatus("adminStatus", MSG_NET, true);
+renderAdmin();
 });
-return "BL-" + (max + 1);
 }
 
 // New delivery form
 document.getElementById("newDeliveryForm").addEventListener("submit", function (e) {
 e.preventDefault();
+var form = this;
 var dest = document.getElementById("fDest").value.trim();
 var end = document.getElementById("fBairro").value.trim();
 var vol = document.getElementById("fVolume").value.trim();
@@ -2056,44 +2133,54 @@ if (!dest || !end || !vol) {
 window.skipUI.toast("Preencha destinatário, endereço e volume.", { type: "error" });
 return;
 }
-var now = new Date();
-var pad = function (n) { return String(n).padStart(2, "0"); };
-var date = pad(now.getDate()) + "/" + pad(now.getMonth() + 1) + "/" + now.getFullYear();
-var time = pad(now.getHours()) + ":" + pad(now.getMinutes());
-var code = nextCode();
-var newDel = {
-code: code,
+var btn = form.querySelector('button[type="submit"]');
+var code = nextCodeFrom(cache);
+var payload = {
+codigo: code,
 destinatario: dest,
 endereco: end,
 cidade: document.getElementById("fCidade").value,
 volume: vol,
 previsao: document.getElementById("fPrev").value,
-stage: 0,
-history: [{ label: "Coletado", date: date, time: time, note: "Coleta registrada pelo Bruno." }]
+observacao: ""
 };
-deliveriesStore.update(function (list) { return [newDel].concat(list); });
-this.reset();
-renderAdmin();
+setBusy(btn, true, "Registrando...");
+setStatus("adminStatus", "Registrando coleta...", false);
+apiCriar(payload).then(function () {
+form.reset();
 window.skipUI.toast("Entrega " + code + " registrada como Coletada.", { type: "success" });
+return apiListar();
+}).then(function () {
+setStatus("adminStatus", "", false);
+renderAdmin();
+}).catch(function () {
+setStatus("adminStatus", "Não foi possível registrar a entrega. " + MSG_NET, true);
+window.skipUI.toast("Falha ao registrar a entrega.", { type: "error" });
+}).finally(function () {
+setBusy(btn, false);
+});
 });
 
-function advanceStage(code, stageIndex, note) {
-deliveriesStore.update(function (list) {
-return list.map(function (d) {
-if (d.code !== code) return d;
-var now = new Date();
-var pad = function (n) { return String(n).padStart(2, "0"); };
-var date = pad(now.getDate()) + "/" + pad(now.getMonth() + 1) + "/" + now.getFullYear();
-var time = pad(now.getHours()) + ":" + pad(now.getMinutes());
-var history = d.history.filter(function (h) { return h.label !== STEPS[stageIndex]; });
-history.push({ label: STEPS[stageIndex], date: date, time: time, note: note || (STEPS[stageIndex] + " registrado pelo Bruno.") });
-return Object.assign({}, d, { stage: stageIndex, history: history });
-});
+function updateStage(code, stageIndex, note, btn) {
+setBusy(btn, true, "Salvando...");
+setStatus("adminStatus", "Atualizando " + code + "...", false);
+var payload = { codigo: code, etapa: STEPS[stageIndex], observacao: note || "" };
+apiAtualizar(payload).then(function () {
+window.skipUI.toast(code + " atualizada: " + STEPS[stageIndex] + ".", { type: "success" });
+return apiListar();
+}).then(function () {
+setStatus("adminStatus", "", false);
+renderAdmin();
+}).catch(function () {
+setStatus("adminStatus", "Não foi possível atualizar " + code + ". " + MSG_NET, true);
+window.skipUI.toast("Falha ao atualizar a entrega.", { type: "error" });
+}).finally(function () {
+setBusy(btn, false);
 });
 }
 
 function renderAdmin() {
-var list = deliveriesStore.get() || [];
+var list = cache.map(adaptDelivery);
 var counts = { c: 0, r: 0, e: 0 };
 list.forEach(function (d) {
 if (d.stage === 3) counts.e++;
@@ -2131,9 +2218,7 @@ var b = el("button", "btn-small" + (d.stage === s ? " primary" : ""), STEPS[s]);
 b.type = "button";
 b.addEventListener("click", function () {
 var note = document.getElementById("note-" + d.code).value.trim();
-advanceStage(d.code, s, note);
-renderAdmin();
-window.skipUI.toast(d.code + " atualizada: " + STEPS[s] + ".", { type: "success" });
+updateStage(d.code, s, note, b);
 });
 actions.appendChild(b);
 });
@@ -2148,8 +2233,7 @@ wrap.appendChild(el("p", "helper", "Nenhuma entrega registrada ainda."));
 
 // Copy tracking link
 document.getElementById("copyLinkBtn").addEventListener("click", function () {
-var list = deliveriesStore.get() || [];
-var code = list.length ? list[0].code : "BL-1043";
+var code = cache.length ? cache[0].codigo : "BL-1043";
 var url = window.location.origin + window.location.pathname + "?codigo=" + code;
 if (navigator.clipboard && navigator.clipboard.writeText) {
 navigator.clipboard.writeText(url).then(function () {
@@ -2167,7 +2251,7 @@ var params = new URLSearchParams(window.location.search);
 var codigo = params.get("codigo");
 if (codigo) {
 document.getElementById("trackCode").value = codigo;
-runTrack(codigo);
+runTrack(codigo, document.querySelector('#trackForm button[type="submit"]'));
 }
 })();
 </script>

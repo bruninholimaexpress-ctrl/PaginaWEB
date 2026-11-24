@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bruninho Lima Express — Rastreio de Entregas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Skip artifact shell — fixed styles served beside every artifact.
+   Tokens, utilities and components (basecoat 1.0 markup, no CDN); artifacts
+   override --accent for their own identity. */
+:root {
+  color-scheme: light dark;
+  --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --accent-text: color-mix(in srgb, var(--accent) 72%, #000);
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --text: #14171f;
+  --text-muted: #5b6472;
+  --border: rgba(20, 23, 31, 0.10);
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20, 23, 31, 0.08);
+  --space: 16px;
+  --success: #0a7a35;
+  --danger: #c0262d;
+  --warning: #8a5300;
+}
+/* Theme resolution. Without data-theme the viewer's system preference decides,
+   as it always did. With it, the artifact's own choice wins in BOTH directions:
+   a page that hardcodes one palette must not be handed the opposite set of
+   tokens by the machine it happens to be opened on. The dark values appear
+   twice because a media query cannot be folded into a selector list.
+   The attribute sits inside :where() so these blocks keep the specificity of a
+   bare :root — the page's own <style> is linked after this file and must go on
+   overriding any token it wants, exactly as it could before. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+    --bg: #101318;
+    --surface: #181c23;
+    --text: #eef1f6;
+    --text-muted: #9aa4b2;
+    --border: rgba(238, 241, 246, 0.12);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --success: #4ade80;
+    --danger: #f87171;
+    --warning: #fbbf24;
+  }
+}
+:root:where([data-theme="dark"]) {
+  color-scheme: dark;
+  --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+  --bg: #101318;
+  --surface: #181c23;
+  --text: #eef1f6;
+  --text-muted: #9aa4b2;
+  --border: rgba(238, 241, 246, 0.12);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --success: #4ade80;
+  --danger: #f87171;
+  --warning: #fbbf24;
+}
+:root:where([data-theme="light"]) { color-scheme: light; }
+/* Pages generated before the shell had its own components still link the
+   basecoat CDN, which reads its own tokens and switches theme only on a
+   .dark class. Bridged to the shell's, whatever of it those pages use takes
+   the page's accent and follows the declared theme. Its --accent token is a
+   hover tint, renamed in its theme as --color-accent; the shell's --accent is
+   the brand colour, so the tint is derived from it here. */
+:root {
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface);
+  --popover-foreground: var(--text);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-contrast);
+  --secondary: color-mix(in srgb, var(--text) 7%, var(--surface));
+  --secondary-foreground: var(--text);
+  --muted: color-mix(in srgb, var(--text) 5%, var(--surface));
+  --muted-foreground: var(--text-muted);
+  --color-accent: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  --color-accent-foreground: var(--text);
+  --destructive: var(--danger);
+  --input: var(--border);
+  --ring: var(--accent);
+}
+* { box-sizing: border-box; }
+/* The reset the pages were written against: they all linked basecoat, which
+   ships Tailwind's. Its components now live here, so the reset does too. */
+*, ::before, ::after, ::backdrop { margin: 0; padding: 0; border: 0 solid; }
+/* Preflight's rule too: without it a component class that sets display
+   (.alert, .card, .btn…) beats the hidden attribute and shows the element. */
+[hidden]:where(:not([hidden="until-found"])) { display: none !important; }
+.hidden { display: none !important; }
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
+a { color: inherit; text-decoration: inherit; }
+b, strong { font-weight: bolder; }
+ol, ul, menu { list-style: none; }
+svg, video, canvas, iframe { display: block; vertical-align: middle; }
+button, input, select, textarea { color: inherit; background-color: transparent; border-radius: 0; }
+table { border-collapse: collapse; }
+hr { height: 0; color: inherit; border-top-width: 1px; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+
+.shell-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.shell-section { padding: calc(var(--space) * 2) 0; }
+.shell-grid { display: grid; gap: var(--space); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.shell-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: var(--space); }
+.shell-footer { padding: 24px 0 40px; color: var(--text-muted); font-size: 13px; }
+
+.shell-hero { padding: calc(var(--space) * 3) 0 calc(var(--space) * 2); }
+.shell-hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 10px; text-wrap: balance; }
+.shell-hero p { color: var(--text-muted); max-width: 60ch; margin: 0; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space);
+}
+
+.kpi { display: flex; flex-direction: column; gap: 4px; }
+.kpi .kpi-value { font-size: clamp(22px, 2.3vw, 28px); font-weight: 650; line-height: 1.1; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.kpi .kpi-label { font-size: 13px; color: var(--text-muted); }
+.kpi .kpi-delta { font-size: 12.5px; font-weight: 600; }
+.kpi .kpi-delta.up { color: var(--success); }
+.kpi .kpi-delta.down { color: var(--danger); }
+
+table.shell-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+table.shell-table th {
+  text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 600;
+}
+table.shell-table th, table.shell-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--border); }
+table.shell-table td.num, table.shell-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+.chart-box { width: 100%; min-height: 220px; }
+.chart-box svg { width: 100%; height: auto; display: block; }
+.chart-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin-top: 12px; font-size: 12.5px; color: var(--text-muted); }
+.chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.chart-legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.chart-legend b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.muted { color: var(--text-muted); }
+.accent { color: var(--accent-text); }
+.shell-badge, .eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-text);
+}
+/* A pill keeps its content width inside flex and grid columns, which would
+   otherwise stretch it across the card; a centred parent still centres it. */
+.shell-badge, .eyebrow, .badge { width: fit-content; max-width: 100%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-fade { animation: shell-fade 400ms ease both; }
+  @keyframes shell-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+
+/* Layout and type utilities: what the pages kept spelling in style="".
+   Spacing and type sizes follow Tailwind's scale; there is no Tailwind. */
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.stack { display: flex; flex-direction: column; gap: var(--space); }
+.between { justify-content: space-between; }
+.grow { flex: 1 1 0; min-width: 0; }
+.cols-2, .cols-3, .cols-4, .cols-5 { display: grid; gap: var(--space); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 720px) {
+  .cols-2, .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cols-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1000px) { .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.gap-1 { gap: 4px; } .gap-2 { gap: 8px; } .gap-3 { gap: 12px; } .gap-4 { gap: 16px; } .gap-6 { gap: 24px; }
+.m-0 { margin: 0; }
+.mt-1 { margin-top: 4px; } .mt-2 { margin-top: 8px; } .mt-3 { margin-top: 12px; } .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+.mb-1 { margin-bottom: 4px; } .mb-2 { margin-bottom: 8px; } .mb-3 { margin-bottom: 12px; } .mb-4 { margin-bottom: 16px; } .mb-6 { margin-bottom: 24px; }
+.p-2 { padding: 8px; } .p-3 { padding: 12px; } .p-4 { padding: 16px; } .p-6 { padding: 24px; }
+.text-xs { font-size: 12px; } .text-sm { font-size: 14px; } .text-base { font-size: 16px; }
+.text-lg { font-size: 18px; } .text-xl { font-size: 20px; line-height: 1.35; }
+.text-2xl { font-size: 24px; line-height: 1.25; } .text-3xl { font-size: 30px; line-height: 1.2; }
+.font-medium { font-weight: 500; } .font-semibold { font-weight: 600; } .font-bold { font-weight: 700; }
+.text-right { text-align: right; } .text-center { text-align: center; }
+.nowrap { white-space: nowrap; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+.w-full { width: 100%; }
+.text-success { color: var(--success); } .text-danger { color: var(--danger); } .text-warning { color: var(--warning); }
+
+/* Components, with basecoat 1.0 markup (variants and sizes are data
+   attributes) and the shell tokens, so a page needs neither component CSS
+   nor a CSS framework. An older page that also links basecoat gets these
+   rules after it, over the same properties. */
+button, input, select, textarea { font: inherit; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 36px; padding: 0 14px; border: 1px solid transparent; border-radius: calc(var(--radius) - 2px);
+  background: var(--accent); color: var(--accent-contrast);
+  font-size: 14px; font-weight: 500; line-height: 1; white-space: nowrap; text-decoration: none; cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+.btn:hover { background: color-mix(in srgb, var(--accent) 86%, #000); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: 0.5; pointer-events: none; }
+.btn[data-variant="secondary"] { background: color-mix(in srgb, var(--text) 8%, var(--surface)); color: var(--text); }
+.btn[data-variant="secondary"]:hover { background: color-mix(in srgb, var(--text) 14%, var(--surface)); }
+.btn[data-variant="outline"] { background: var(--surface); color: var(--text); border-color: var(--border); }
+.btn[data-variant="ghost"] { background: transparent; color: var(--text); }
+.btn[data-variant="outline"]:hover, .btn[data-variant="ghost"]:hover { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.btn[data-variant="destructive"] { background: var(--danger); color: var(--bg); }
+.btn[data-variant="destructive"]:hover { background: color-mix(in srgb, var(--danger) 86%, var(--text)); }
+.btn[data-variant="link"] { height: auto; padding: 0; background: none; color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+.btn[data-size="sm"] { height: 30px; padding: 0 10px; font-size: 13px; }
+.btn[data-size="lg"] { height: 42px; padding: 0 20px; font-size: 15px; }
+.btn[data-size="icon"] { width: 36px; padding: 0; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+  border: 1px solid transparent; border-radius: 999px; background: var(--accent); color: var(--accent-contrast);
+  font-size: 12px; font-weight: 600; line-height: 1.5; white-space: nowrap;
+}
+.badge[data-variant="secondary"] { background: color-mix(in srgb, var(--text) 8%, var(--surface)); color: var(--text); }
+.badge[data-variant="outline"] { background: transparent; color: var(--text); border-color: var(--border); }
+.badge[data-variant="destructive"] { background: color-mix(in srgb, var(--danger) 14%, var(--surface)); color: var(--danger); }
+
+.alert {
+  display: grid; gap: 4px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); color: var(--text); font-size: 14px;
+}
+.alert h2, .alert h3 { margin: 0; font-size: 14px; font-weight: 600; }
+.alert p, .alert section { margin: 0; color: var(--text-muted); }
+.alert[data-variant="destructive"] { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); background: color-mix(in srgb, var(--danger) 7%, var(--surface)); color: var(--danger); }
+
+.card {
+  display: flex; flex-direction: column; gap: 16px; padding: 20px 0;
+  border: 1px solid var(--border); border-radius: calc(var(--radius) + 2px);
+  background: var(--surface); color: var(--text); box-shadow: var(--shadow);
+}
+.card > header, .card > section, .card > footer { padding: 0 20px; }
+.card > header { display: grid; gap: 4px; }
+.card > header h2, .card > header h3 { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.3; }
+.card > header p { margin: 0; color: var(--text-muted); font-size: 14px; }
+.card > footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+.input {
+  width: 100%; min-height: 36px; padding: 6px 12px; border: 1px solid var(--border); border-radius: calc(var(--radius) - 2px);
+  background: var(--surface); color: var(--text); font-size: 14px;
+}
+textarea.input { min-height: 84px; resize: vertical; }
+.input::placeholder { color: var(--text-muted); }
+.input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 14px; font-weight: 500; }
+.field [role="alert"] { color: var(--danger); font-size: 13px; }
+
+dialog.dialog {
+  width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 32px); margin: auto; padding: 0;
+  border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px);
+  background: var(--surface); color: var(--text); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+dialog.dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+dialog.dialog > div { display: grid; gap: 16px; padding: 24px; }
+dialog.dialog header { display: grid; gap: 4px; }
+dialog.dialog header h2 { margin: 0; font-size: 18px; font-weight: 600; }
+dialog.dialog header p { margin: 0; color: var(--text-muted); font-size: 14px; }
+dialog.dialog footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+
+.tabs { display: grid; gap: 12px; }
+.tabs > [role="tablist"] {
+  display: inline-flex; gap: 4px; width: fit-content; max-width: 100%; padding: 4px; overflow-x: auto;
+  border-radius: var(--radius); background: color-mix(in srgb, var(--text) 6%, var(--surface));
+}
+.tabs [role="tab"] {
+  padding: 6px 12px; border: 0; border-radius: calc(var(--radius) - 4px); background: transparent;
+  color: var(--text-muted); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer;
+}
+.tabs [role="tab"][aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.tabs [role="tabpanel"][hidden] { display: none; }
+
+.accordion > details { border-bottom: 1px solid var(--border); }
+.accordion > details > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 0; font-weight: 500; list-style: none; cursor: pointer;
+}
+.accordion > details > summary::-webkit-details-marker { display: none; }
+.accordion > details > summary::after { content: "+"; color: var(--text-muted); font-size: 18px; line-height: 1; }
+.accordion > details[open] > summary::after { content: "\2212"; }
+.accordion > details > :not(summary) { margin: 0 0 14px; color: var(--text-muted); }
+
+.toaster {
+  position: fixed; right: 16px; bottom: 16px; z-index: 50; display: flex; flex-direction: column-reverse; gap: 8px;
+  width: min(360px, calc(100vw - 32px)); pointer-events: none;
+}
+.toaster .toast { pointer-events: auto; transition: opacity 200ms ease, transform 200ms ease; }
+.toaster .toast[aria-hidden="true"] { opacity: 0; transform: translateY(8px); }
+.toaster .toast-content {
+  padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); color: var(--text); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); font-size: 13px;
+}
+.toaster .toast-content h2 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
+.toaster .toast-content p { margin: 0; color: var(--text-muted); }
+
+/* skipUI building blocks. */
+.skip-table-search { max-width: 320px; margin-bottom: 12px; }
+.skip-table-wrap { overflow-x: auto; }
+table.shell-table th[data-sort] { cursor: pointer; user-select: none; }
+table.shell-table th[aria-sort="ascending"]::after { content: " \25B2"; font-size: 9px; }
+table.shell-table th[aria-sort="descending"]::after { content: " \25BC"; font-size: 9px; }
+table.shell-table td.skip-table-empty { color: var(--text-muted); text-align: center; padding: 24px 0; }
+.skip-pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--text-muted); }
+.toaster .toast[data-type="success"] .toast-content { border-left: 3px solid var(--success); }
+.toaster .toast[data-type="error"] .toast-content { border-left: 3px solid var(--danger); }
+
+</style>
+<script>
+/* Skip artifact shell — fixed helpers served beside every artifact. */
+(function () {
+  "use strict";
+
+  var fmt = {
+    num: function (v, opts) { return new Intl.NumberFormat("pt-BR", opts || {}).format(v); },
+    brl: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v); },
+    pct: function (v) { return new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 }).format(v); },
+    compact: function (v) { return new Intl.NumberFormat("pt-BR", { notation: "compact", maximumFractionDigits: 1 }).format(v); },
+    brlCompact: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact", maximumFractionDigits: 1 }).format(v); }
+  };
+
+  // axisLabels formats the five y-axis ticks in the unit the chart declared
+  // (percent, BRL or plain numbers), compact so long values never clip, with
+  // the fewest decimals that still print every tick exactly (1,5 mi, not 2 mi).
+  function axisLabels(format, ticks) {
+    function at(digits) {
+      var opts = { notation: "compact", maximumFractionDigits: digits };
+      if (format === "pct") opts = { style: "percent", maximumFractionDigits: digits };
+      else if (format === "brl") opts = { style: "currency", currency: "BRL", notation: "compact", maximumFractionDigits: digits };
+      var nf = new Intl.NumberFormat("pt-BR", opts);
+      return ticks.map(function (t) { return nf.format(t); });
+    }
+    for (var digits = 0; digits < 2; digits++) {
+      if (at(digits).join("|") === at(digits + 1).join("|")) return at(digits);
+    }
+    return at(2);
+  }
+
+  // yAxisPad formats the ticks and measures the left padding they need from
+  // the longest one; drawYAxis then draws the grid and the labels.
+  function yAxisPad(format, max) {
+    var labels = axisLabels(format, [0, max / 4, max / 2, (max * 3) / 4, max]);
+    var longest = labels.reduce(function (m, l) { return Math.max(m, l.length); }, 0);
+    return { labels: labels, padL: Math.max(40, Math.round(longest * 6.2) + 14) };
+  }
+  function drawYAxis(svg, axis, W, padR, padT, plotH) {
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: axis.padL, y1: gy, x2: W - padR, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: axis.padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axis.labels[g];
+      svg.appendChild(lbl);
+    }
+  }
+
+  // xLabelStep: show every k-th category label so labels never overlap, and
+  // always the last one (counted back from the end).
+  function xLabelStep(labels, step) {
+    var longest = labels.reduce(function (m, l) { return Math.max(m, String(l).length); }, 0);
+    return Math.max(1, Math.ceil((longest * 6.4 + 8) / Math.max(step, 1)));
+  }
+  function drawXLabel(svg, text, x, y, W, edgeGuard) {
+    var anchor = "middle";
+    var half = String(text).length * 3.2;
+    if (edgeGuard && x - half < 4) anchor = "start";
+    if (edgeGuard && x + half > W - 4) anchor = "end";
+    var tx = svgEl("text", { x: x, y: y, "text-anchor": anchor, "font-size": 11, fill: mutedColor() });
+    tx.textContent = text;
+    svg.appendChild(tx);
+  }
+  // categoryLines fits a bar's category name in its slot: one line, two lines
+  // split at a space, or cut with "…". A bar without its name can't be read, so
+  // categories are never skipped; null when the slot is too narrow for that.
+  function categoryLines(text, slot) {
+    var fit = Math.floor((slot - 6) / 6.4);
+    var s = String(text);
+    if (fit < 4) return null;
+    if (s.length <= fit) return [s];
+    var cut = function (t) { return t.length <= fit ? t : t.slice(0, fit - 1).trimEnd() + "…"; };
+    var best = -1;
+    for (var i = 0; i < s.length; i++) {
+      if (s[i] === " " && (best < 0 || Math.abs(s.length / 2 - i) < Math.abs(s.length / 2 - best))) best = i;
+    }
+    if (best < 0) return [cut(s)];
+    return [cut(s.slice(0, best)), cut(s.slice(best + 1))];
+  }
+  function legend(el, items) {
+    var box = document.createElement("div");
+    box.className = "chart-legend";
+    items.forEach(function (it) {
+      var row = document.createElement("span");
+      var dot = document.createElement("i");
+      dot.style.background = it.color;
+      row.appendChild(dot);
+      row.appendChild(document.createTextNode((it.label || "") + (it.value ? " " : "")));
+      if (it.value) {
+        var v = document.createElement("b");
+        v.textContent = it.value;
+        row.appendChild(v);
+      }
+      box.appendChild(row);
+    });
+    resolve(el).appendChild(box);
+  }
+  var seriesPalette = ["#1baf7a", "#eda100", "#e34948", "#4a3aa7", "#e87ba4", "#0ea5b7"];
+
+  // format accepts a function OR one of the fmt names ("num" | "brl" | "pct").
+  // A page's function may return nothing or throw: the chart prints its
+  // number instead of taking the rest of the page script down with it.
+  function coerceFormat(spec) {
+    if (typeof spec === "function") {
+      return function (v) {
+        try {
+          var out = spec(v);
+          return out == null ? "" : String(out);
+        } catch (e) {
+          return fmt.num(v);
+        }
+      };
+    }
+    if (typeof spec === "string" && fmt[spec]) return fmt[spec];
+    return function (v) { return fmt.num(v); };
+  }
+
+  function accent() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb";
+  }
+  function mutedColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#5b6472";
+  }
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function frame(el, w, h) {
+    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
+    el = resolve(el);
+    el.innerHTML = "";
+    el.appendChild(svg);
+    return svg;
+  }
+
+  // maxOf guards the axis scale: empty values would give -Infinity (truthy,
+  // so "|| 1" can't catch it) and a non-positive max would flip the chart.
+  // finite reads a chart value as a number, 0 when it is not one (NaN,
+  // Infinity, a stray string), so one bad value cannot blank the axis.
+  function finite(v) {
+    var n = +v;
+    return isFinite(n) ? n : 0;
+  }
+
+  function maxOf(values) {
+    var m = values.length ? Math.max.apply(null, values.map(finite)) : 0;
+    return m > 0 ? m : 1;
+  }
+
+  // labelsFor pads or trims the category names to the n points drawn: pages
+  // pass labels and values of different lengths, and one throw here loses
+  // every section the page renders after the chart.
+  function labelsFor(cfg, n) {
+    var out = [];
+    for (var i = 0; i < n; i++) out.push(cfg.labels && cfg.labels[i] != null ? String(cfg.labels[i]) : "");
+    return out;
+  }
+
+  // niceMax rounds the scale up so the four grid steps land on round values
+  // (1, 1.5, 2, 2.5, 3, 4, 5, 6 or 8 × 10^k) and the tick labels read exactly.
+  function niceMax(max) {
+    var raw = max / 4;
+    var mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    var res = raw / mag;
+    var steps = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10];
+    var nice = steps.filter(function (s) { return s >= res - 1e-9; })[0];
+    return nice * mag * 4;
+  }
+
+  // bar(el, {labels:[], values:[], color?, format?}) — vertical bar chart.
+  function bar(el, cfg) {
+    var W = 640, H = 280, padB = 30, padT = 12, padR = 12;
+    var max = niceMax(maxOf(cfg.values));
+    var axis = yAxisPad(cfg.format, max);
+    var svg = frame(el, W, H);
+    var n = cfg.values.length;
+    var labels = labelsFor(cfg, n);
+    var plotW = W - axis.padL - padR;
+    var step = plotW / n, bw = Math.min(step * 0.62, 64);
+    var names = labels.map(function (l) { return categoryLines(l, step); });
+    var named = names.every(Boolean);
+    if (named && names.some(function (l) { return l.length > 1; })) padB = 42;
+    var plotH = H - padT - padB;
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    var every = xLabelStep(labels, step);
+    drawYAxis(svg, axis, W, padR, padT, plotH);
+    cfg.values.forEach(function (v, i) {
+      var bh = Math.max(0, (finite(v) / max) * plotH);
+      var x = axis.padL + i * step + (step - bw) / 2;
+      var y = padT + plotH - bh;
+      var r = svgEl("rect", { x: x, y: y, width: bw, height: bh, rx: 4, fill: (cfg.colors && cfg.colors[i]) || color });
+      var t = svgEl("title", {});
+      t.textContent = labels[i] + ": " + f(v);
+      r.appendChild(t);
+      svg.appendChild(r);
+      if (named) {
+        names[i].forEach(function (text, li) {
+          drawXLabel(svg, text, x + bw / 2, padT + plotH + 18 + li * 13, W, false);
+        });
+      } else if ((n - 1 - i) % every === 0) {
+        drawXLabel(svg, labels[i], x + bw / 2, H - 10, W, false);
+      }
+    });
+  }
+
+  // line(el, {labels:[], values:[] | series:[{label, values, color?}], color?, format?})
+  // — one line, or several series on one scale with a legend under the chart.
+  function line(el, cfg) {
+    var W = 640, H = 280, padB = 30, padT = 12, padR = 16;
+    var series = cfg.series && cfg.series.length
+      ? cfg.series
+      : [{ label: "", values: cfg.values || [], color: cfg.color }];
+    var all = [];
+    series.forEach(function (s) { all = all.concat(s.values || []); });
+    var max = niceMax(maxOf(all));
+    var axis = yAxisPad(cfg.format, max);
+    var svg = frame(el, W, H);
+    var n = series.reduce(function (m, s) { return Math.max(m, (s.values || []).length); }, 0);
+    var labels = labelsFor(cfg, n);
+    var plotW = W - axis.padL - padR, plotH = H - padT - padB;
+    var f = coerceFormat(cfg.format);
+    drawYAxis(svg, axis, W, padR, padT, plotH);
+    var xs = labels.map(function (_, i) { return axis.padL + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1)); });
+    var every = xLabelStep(labels, n > 1 ? plotW / (n - 1) : plotW);
+    labels.forEach(function (label, i) {
+      if ((n - 1 - i) % every === 0) drawXLabel(svg, label, xs[i], H - 10, W, true);
+    });
+    var colors = series.map(function (s, si) {
+      return s.color || (si === 0 ? (cfg.color || accent()) : seriesPalette[(si - 1) % seriesPalette.length]);
+    });
+    series.forEach(function (s, si) {
+      var color = colors[si];
+      var pts = (s.values || []).map(function (v, i) { return [xs[i], padT + plotH - (finite(v) / max) * plotH]; });
+      var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+      svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
+      pts.forEach(function (p, i) {
+        var c = svgEl("circle", { cx: p[0], cy: p[1], r: 3.5, fill: color });
+        var t = svgEl("title", {});
+        t.textContent = (s.label ? s.label + " · " : "") + labels[i] + ": " + f(s.values[i]);
+        c.appendChild(t);
+        svg.appendChild(c);
+      });
+    });
+    if (series.length > 1) {
+      legend(el, series.map(function (s, si) { return { label: s.label, color: colors[si] }; }));
+    }
+  }
+
+  // donut(el, {labels:[], values:[], colors?, format?, center?, centerLabel?, legend?})
+  // — donut with a short total in the centre (compact, in the declared unit)
+  // and, with legend: true, the labels and shares listed under it.
+  function donut(el, cfg) {
+    var W = 320, H = 280, cx = W / 2, cy = H / 2, R = 92, r = 58;
+    var svg = frame(el, W, H);
+    // At 100% of a wide container the donut outgrows the height pages give
+    // the box and spills over the next section: keep it at its own size.
+    svg.style.maxWidth = W + "px";
+    svg.style.margin = "0 auto";
+    var values = cfg.values.map(finite);
+    var labels = labelsFor(cfg, values.length);
+    var sum = values.reduce(function (a, b) { return a + b; }, 0);
+    var total = sum || 1;
+    var palette = cfg.colors || [accent()].concat(seriesPalette);
+    // The hover keeps the full value; the centre has room for a short one.
+    var full = coerceFormat(cfg.format);
+    var short = typeof cfg.format === "function" ? full : cfg.format === "brl" ? fmt.brlCompact : fmt.compact;
+    var a0 = -Math.PI / 2;
+    values.forEach(function (v, i) {
+      var a1 = a0 + (v / total) * Math.PI * 2;
+      var large = a1 - a0 > Math.PI ? 1 : 0;
+      var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0),
+        "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
+        "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1),
+        "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
+      var path = svgEl("path", { d: p, fill: palette[i % palette.length] });
+      var t = svgEl("title", {});
+      t.textContent = labels[i] + ": " + full(v) + " (" + fmt.pct(v / total) + ")";
+      path.appendChild(t);
+      svg.appendChild(path);
+      a0 = a1;
+    });
+    // A share chart has no total worth printing: without its own centre text
+    // the caption alone takes the middle.
+    var text = cfg.center != null ? String(cfg.center) : (cfg.format === "pct" ? "" : short(sum));
+    if (text) {
+      var size = text.length > 9 ? 14 : text.length > 7 ? 17 : 20;
+      var center = svgEl("text", { x: cx, y: cfg.centerLabel ? cy + 1 : cy + 6, "text-anchor": "middle", "font-size": size, "font-weight": 650, fill: "currentColor" });
+      center.textContent = text;
+      svg.appendChild(center);
+    }
+    if (cfg.centerLabel) {
+      var cap = svgEl("text", { x: cx, y: text ? cy + 19 : cy + 5, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      cap.textContent = cfg.centerLabel;
+      svg.appendChild(cap);
+    }
+    if (cfg.legend) {
+      legend(el, labels.map(function (label, i) {
+        return { label: label, color: palette[i % palette.length], value: fmt.pct(values[i] / total) };
+      }));
+    }
+  }
+
+  // ---- Page building blocks: what dashboards and small systems kept
+  // re-implementing — a searchable sortable table, a KPI row, tabs, toasts,
+  // dialogs, saved state and mock data. Every call is opt-in, so a page that
+  // brings its own versions keeps them.
+
+  function resolve(target) {
+    return typeof target === "string" ? document.querySelector(target) : target;
+  }
+
+  function node(tag, className, text) {
+    var el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text != null) el.textContent = text;
+    return el;
+  }
+
+  function isNumberColumn(col) {
+    return col.align === "right" || col.format === "num" || col.format === "brl" || col.format === "pct";
+  }
+
+  function cellText(col, row) {
+    var value = row[col.key];
+    if (value == null) return "";
+    return col.format ? coerceFormat(col.format)(value) : String(value);
+  }
+
+  function compareValues(a, b) {
+    if (typeof a === "number" && typeof b === "number") return a - b;
+    return String(a == null ? "" : a).localeCompare(String(b == null ? "" : b), "pt-BR", { numeric: true });
+  }
+
+  // table(el, {columns, rows, search?, pageSize?, empty?, onRowClick?}) — a
+  // table.shell-table with sortable headers, an optional search box and
+  // pager. A column is {key, label, format?, align?, sortable? (true),
+  // render?(value, row) returning a Node (data set as text); a returned string
+  // is written with innerHTML, so only for fixed markup with no data}. Plain
+  // values are always set as text.
+  // Returns {setRows, rows}.
+  function table(target, cfg) {
+    var root = resolve(target);
+    var cols = cfg.columns || [];
+    var pageSize = cfg.pageSize || 0;
+    var state = { rows: (cfg.rows || []).slice(), query: "", key: null, dir: 1, page: 0 };
+    root.innerHTML = "";
+    if (cfg.search) {
+      var search = node("input", "input skip-table-search");
+      search.type = "search";
+      search.placeholder = typeof cfg.search === "string" ? cfg.search : "Buscar…";
+      search.setAttribute("aria-label", search.placeholder);
+      search.addEventListener("input", function () {
+        state.query = search.value.trim().toLowerCase();
+        state.page = 0;
+        draw();
+      });
+      root.appendChild(search);
+    }
+    var tableEl = node("table", "shell-table");
+    var headRow = node("tr");
+    var heads = cols.map(function (col) {
+      var th = node("th", isNumberColumn(col) ? "num" : "", col.label == null ? col.key : col.label);
+      th.scope = "col";
+      if (col.sortable !== false) {
+        var toggle = function () {
+          state.dir = state.key === col.key ? -state.dir : 1;
+          state.key = col.key;
+          draw();
+        };
+        th.setAttribute("data-sort", col.key);
+        th.tabIndex = 0;
+        th.addEventListener("click", toggle);
+        th.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+        });
+      }
+      headRow.appendChild(th);
+      return th;
+    });
+    var thead = node("thead");
+    var tbody = node("tbody");
+    var wrap = node("div", "skip-table-wrap");
+    var pager = node("div", "skip-pager");
+    thead.appendChild(headRow);
+    tableEl.appendChild(thead);
+    tableEl.appendChild(tbody);
+    wrap.appendChild(tableEl);
+    root.appendChild(wrap);
+    if (pageSize) root.appendChild(pager);
+
+    function visibleRows() {
+      var rows = state.rows;
+      if (state.query) {
+        rows = rows.filter(function (row) {
+          return cols.some(function (col) { return cellText(col, row).toLowerCase().indexOf(state.query) >= 0; });
+        });
+      }
+      if (state.key) {
+        var key = state.key, dir = state.dir;
+        rows = rows.slice().sort(function (a, b) { return dir * compareValues(a[key], b[key]); });
+      }
+      return rows;
+    }
+
+    function drawRow(row) {
+      var tr = node("tr");
+      cols.forEach(function (col) {
+        var td = node("td", isNumberColumn(col) ? "num" : "");
+        if (!col.render) {
+          td.textContent = cellText(col, row);
+        } else {
+          var content = col.render(row[col.key], row);
+          if (content instanceof Node) td.appendChild(content);
+          else td.innerHTML = content == null ? "" : String(content);
+        }
+        tr.appendChild(td);
+      });
+      // The row stays a row (no role) and takes focus, so a keyboard reaches
+      // the same action; keys pressed on a control inside a cell are its own.
+      if (cfg.onRowClick) {
+        tr.style.cursor = "pointer";
+        tr.tabIndex = 0;
+        tr.addEventListener("click", function () { cfg.onRowClick(row); });
+        tr.addEventListener("keydown", function (e) {
+          if (e.target !== tr || (e.key !== "Enter" && e.key !== " ")) return;
+          e.preventDefault();
+          cfg.onRowClick(row);
+        });
+      }
+      return tr;
+    }
+
+    function pagerButton(label, disabled, step) {
+      var button = node("button", "btn", label);
+      button.type = "button";
+      button.setAttribute("data-variant", "outline");
+      button.setAttribute("data-size", "sm");
+      button.disabled = disabled;
+      button.addEventListener("click", function () { state.page += step; draw(); });
+      return button;
+    }
+
+    function draw() {
+      var rows = visibleRows();
+      heads.forEach(function (th, i) {
+        if (cols[i].key === state.key) th.setAttribute("aria-sort", state.dir > 0 ? "ascending" : "descending");
+        else th.removeAttribute("aria-sort");
+      });
+      var pages = pageSize ? Math.max(1, Math.ceil(rows.length / pageSize)) : 1;
+      state.page = Math.min(state.page, pages - 1);
+      var shown = pageSize ? rows.slice(state.page * pageSize, (state.page + 1) * pageSize) : rows;
+      tbody.innerHTML = "";
+      if (!shown.length) {
+        var empty = node("td", "skip-table-empty", cfg.empty || "Nenhum registro encontrado.");
+        empty.colSpan = cols.length;
+        tbody.appendChild(node("tr")).appendChild(empty);
+      }
+      shown.forEach(function (row) { tbody.appendChild(drawRow(row)); });
+      if (!pageSize) return;
+      pager.innerHTML = "";
+      var from = rows.length ? state.page * pageSize + 1 : 0;
+      pager.appendChild(node("span", "", from + "–" + Math.min(rows.length, (state.page + 1) * pageSize) + " de " + rows.length));
+      var nav = node("div", "row gap-2");
+      nav.appendChild(pagerButton("Anterior", state.page === 0, -1));
+      nav.appendChild(pagerButton("Próxima", state.page >= pages - 1, 1));
+      pager.appendChild(nav);
+    }
+
+    draw();
+    return {
+      setRows: function (rows) { state.rows = rows.slice(); draw(); },
+      rows: visibleRows
+    };
+  }
+
+  // kpis(el, [{label, value, format?, delta?, hint?}]) — KPI cards in a
+  // responsive grid; delta is a fraction (0.12 renders as ▲ 12%).
+  function kpis(target, items) {
+    var root = resolve(target);
+    root.innerHTML = "";
+    root.classList.add("shell-grid");
+    items.forEach(function (item) {
+      var card = node("div", "panel kpi");
+      card.appendChild(node("span", "kpi-label", item.label));
+      // Large money values go compact ("R$ 27,5 mi"): the full amount does
+      // not fit a KPI card at four per row.
+      var kpiFormat = item.format === "brl" && Math.abs(item.value) >= 1e6 ? fmt.brlCompact : (item.format ? coerceFormat(item.format) : null);
+      card.appendChild(node("span", "kpi-value", kpiFormat ? kpiFormat(item.value) : String(item.value)));
+      if (typeof item.delta === "number") {
+        var up = item.delta >= 0;
+        card.appendChild(node("span", "kpi-delta " + (up ? "up" : "down"), (up ? "▲ " : "▼ ") + fmt.pct(Math.abs(item.delta))));
+      }
+      if (item.hint) card.appendChild(node("span", "kpi-label", item.hint));
+      root.appendChild(card);
+    });
+  }
+
+  // badge(text, variant?) — a .badge node for table cells and lists;
+  // variant is "secondary" | "outline" | "destructive" (default: primary).
+  function badge(text, variant) {
+    var el = node("span", "badge", text);
+    if (variant) el.setAttribute("data-variant", variant);
+    return el;
+  }
+
+  // tabs(el) — wires one .tabs block: [role=tab] buttons inside
+  // [role=tablist], each with aria-controls naming its [role=tabpanel].
+  function tabs(target) {
+    var root = resolve(target);
+    var buttons = Array.prototype.slice.call(root.querySelectorAll('[role="tab"]'));
+    function select(chosen) {
+      buttons.forEach(function (b) {
+        var on = b === chosen;
+        b.setAttribute("aria-selected", on ? "true" : "false");
+        b.tabIndex = on ? 0 : -1;
+        var panel = document.getElementById(b.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
+      });
+    }
+    buttons.forEach(function (b, i) {
+      b.addEventListener("click", function () { select(b); });
+      b.addEventListener("keydown", function (e) {
+        var step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!step) return;
+        var next = buttons[(i + step + buttons.length) % buttons.length];
+        next.focus();
+        select(next);
+      });
+    });
+    select(buttons.filter(function (b) { return b.getAttribute("aria-selected") === "true"; })[0] || buttons[0]);
+  }
+
+  // toast(message, {type?: "success" | "error", title?, duration?}) — a
+  // .toast in a shared .toaster at the bottom of the page.
+  function toast(message, opts) {
+    opts = opts || {};
+    var toaster = document.querySelector(".toaster") || document.body.appendChild(node("div", "toaster"));
+    var item = node("div", "toast");
+    item.setAttribute("role", opts.type === "error" ? "alert" : "status");
+    item.setAttribute("aria-hidden", "true");
+    if (opts.type) item.setAttribute("data-type", opts.type);
+    var content = node("div", "toast-content");
+    var section = node("section");
+    if (opts.title) section.appendChild(node("h2", "", opts.title));
+    section.appendChild(node("p", "", message));
+    content.appendChild(section);
+    item.appendChild(content);
+    toaster.appendChild(item);
+    requestAnimationFrame(function () { item.setAttribute("aria-hidden", "false"); });
+    setTimeout(function () {
+      item.setAttribute("aria-hidden", "true");
+      setTimeout(function () { item.remove(); }, 400);
+    }, opts.duration || 3000);
+  }
+
+  // Dialogs are native <dialog class="dialog">: a [data-dialog-open="id"]
+  // anywhere opens one, a [data-dialog-close] inside closes it, and a click on
+  // its backdrop closes it too. Plain dialog.showModal()/close() still work.
+  document.addEventListener("click", function (e) {
+    var target = e.target;
+    if (!(target instanceof Element)) return;
+    var opener = target.closest("[data-dialog-open]");
+    if (opener) {
+      var dialog = document.getElementById(opener.getAttribute("data-dialog-open"));
+      if (dialog && dialog.showModal && !dialog.open) dialog.showModal();
+      return;
+    }
+    var closer = target.closest("[data-dialog-close]");
+    if (closer && closer.closest("dialog")) {
+      closer.closest("dialog").close();
+      return;
+    }
+    if (target.tagName === "DIALOG" && target.classList.contains("dialog") && target.open) target.close();
+  });
+
+  // store(key, fallback) — JSON state in localStorage that never throws (a
+  // private window or a full quota falls back to memory): {get, set, update}.
+  function store(key, fallback) {
+    var memory;
+    // Set while the last write did not reach localStorage: what is stored
+    // there is older than memory until a write goes through again.
+    var unsaved = false;
+    var initial = function () { return fallback === undefined ? undefined : JSON.parse(JSON.stringify(fallback)); };
+    function get() {
+      if (!unsaved) {
+        try {
+          var raw = localStorage.getItem(key);
+          if (raw != null) return JSON.parse(raw);
+        } catch (e) { /* storage unavailable: memory below */ }
+      }
+      return memory !== undefined ? memory : initial();
+    }
+    function set(value) {
+      memory = value;
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+        unsaved = false;
+      } catch (e) {
+        unsaved = true;
+      }
+      return value;
+    }
+    return { get: get, set: set, update: function (fn) { return set(fn(get())); } };
+  }
+
+  // mock — seeded random data, so a page asks for 90 days of numbers in one
+  // line instead of writing them out; the same seed gives the same data.
+  var FIRST = ["Ana", "Bruno", "Carla", "Diego", "Eduarda", "Felipe", "Gabriela", "Henrique", "Isabela", "João",
+    "Larissa", "Marcos", "Natália", "Otávio", "Paula", "Rafael", "Sofia", "Thiago", "Vanessa", "Lucas"];
+  var LAST = ["Silva", "Santos", "Oliveira", "Souza", "Pereira", "Costa", "Rodrigues", "Almeida", "Nascimento", "Lima",
+    "Araújo", "Fernandes", "Carvalho", "Gomes", "Martins", "Rocha", "Ribeiro", "Barbosa"];
+  var INITIALS = "ABCDEFGHIJLMNOPRSTV".split("");
+  var CITIES = ["São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", "Curitiba, PR", "Porto Alegre, RS",
+    "Salvador, BA", "Recife, PE", "Fortaleza, CE", "Brasília, DF", "Goiânia, GO", "Campinas, SP", "Florianópolis, SC",
+    "Manaus, AM", "Belém, PA", "Vitória, ES", "Natal, RN"];
+
+  function createMock(seed) {
+    var state = seed >>> 0;
+    var names = 0;
+    function random() {
+      state = (state + 0x6d2b79f5) >>> 0;
+      var t = state;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+    function int(min, max) { return min + Math.floor(random() * (max - min + 1)); }
+    function pick(list) { return list[Math.floor(random() * list.length)]; }
+    var mock = {
+      seed: function (value) { state = value >>> 0; names = 0; return mock; },
+      random: random,
+      int: int,
+      float: function (min, max, decimals) {
+        var factor = Math.pow(10, decimals == null ? 2 : decimals);
+        return Math.round((min + random() * (max - min)) * factor) / factor;
+      },
+      pick: pick,
+      chance: function (p) { return random() < p; },
+      // There are 360 first/last pairs. A page that draws until the name is
+      // new (do { … } while (used.has(name))) froze the tab past them, so
+      // later draws widen the space: a second surname after 200 (6,480), a
+      // middle initial after 4,000.
+      name: function () {
+        names++;
+        var middle = names > 4000 ? pick(INITIALS) + ". " : "";
+        return pick(FIRST) + " " + middle + (names > 200 ? pick(LAST) + " " : "") + pick(LAST);
+      },
+      city: function () { return pick(CITIES); },
+      // series(n, {start, trend, noise, min, decimals}) — a walk: each value
+      // moves by trend (fraction per step) plus up to ±noise of itself.
+      series: function (n, opts) {
+        opts = opts || {};
+        var value = opts.start == null ? 100 : opts.start;
+        var factor = Math.pow(10, opts.decimals || 0);
+        var out = [];
+        for (var i = 0; i < n; i++) {
+          out.push(Math.max(opts.min == null ? 0 : opts.min, Math.round(value * factor) / factor));
+          value = value * (1 + (opts.trend || 0)) * (1 + (random() * 2 - 1) * (opts.noise == null ? 0.08 : opts.noise));
+        }
+        return out;
+      },
+      // dates(n, {end?, step?: "day" | "week" | "month"}) — ISO dates
+      // (YYYY-MM-DD), oldest first, ending at end (default: today).
+      dates: function (n, opts) {
+        opts = opts || {};
+        var end = opts.end ? new Date(opts.end) : new Date();
+        var out = [];
+        for (var i = n - 1; i >= 0; i--) {
+          var d = new Date(end.getTime());
+          if (opts.step === "month") d.setMonth(d.getMonth() - i);
+          else d.setDate(d.getDate() - i * (opts.step === "week" ? 7 : 1));
+          out.push(d.toISOString().slice(0, 10));
+        }
+        return out;
+      },
+      // rows(n, spec) — n objects; each spec value is a function(i), a list
+      // to pick from, or a constant.
+      rows: function (n, spec) {
+        var out = [];
+        for (var i = 0; i < n; i++) {
+          var row = {};
+          for (var key in spec) {
+            var value = spec[key];
+            row[key] = typeof value === "function" ? value(i) : Array.isArray(value) ? pick(value) : value;
+          }
+          out.push(row);
+        }
+        return out;
+      }
+    };
+    return mock;
+  }
+
+  window.skipShell = { fmt: fmt };
+  window.skipChart = { bar: bar, line: line, donut: donut };
+  window.skipUI = { table: table, kpis: kpis, badge: badge, tabs: tabs, toast: toast };
+  window.skipStore = store;
+  window.skipMock = createMock(20261022);
+})();
+
+</script>
+<style>
+:root {
+--accent: #C1502E;
+--accent-text: #A8431F;
+--accent-contrast: #ffffff;
+--mustard: #E8A33D;
+--orange: #E07A3F;
+--cream: #FDF6EC;
+--charcoal: #2E2A27;
+--bg: #FDF6EC;
+--surface: #ffffff;
+--text: #2E2A27;
+--text-muted: #6B625B;
+--border: #EFE2D0;
+--radius: 18px;
+font-family: "Nunito", "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+body {
+background: var(--cream);
+color: var(--charcoal);
+font-family: "Nunito", "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+min-height: 100vh;
+}
+h1, h2, h3, h4 { font-family: "Nunito", "Poppins", system-ui, sans-serif; color: var(--charcoal); }
+.brand-header {
+background: linear-gradient(135deg, #C1502E 0%, #E07A3F 60%, #E8A33D 100%);
+color: #fff;
+border-radius: 0 0 28px 28px;
+padding: 28px 0 90px;
+position: relative;
+}
+.brand-header .muted { color: rgba(255,255,255,0.9); }
+.eyebrow-pill {
+display: inline-block;
+background: rgba(255,255,255,0.2);
+color: #fff;
+padding: 4px 14px;
+border-radius: 999px;
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 0.04em;
+text-transform: uppercase;
+}
+.brand-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.brand-title { font-size: 26px; font-weight: 800; margin: 0; color: #fff; }
+.brand-sub { font-size: 15px; margin: 2px 0 0; color: rgba(255,255,255,0.92); }
+.card-float {
+background: var(--surface);
+border-radius: var(--radius);
+box-shadow: 0 10px 30px rgba(46,42,39,0.08);
+border: 1px solid var(--border);
+padding: 22px;
+}
+.search-card { margin-top: -64px; position: relative; z-index: 2; }
+.mascot-wrap { display: flex; align-items: center; gap: 18px; }
+.mascot-wrap svg { width: 110px; height: auto; flex-shrink: 0; }
+.search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.search-row .input { flex: 1; min-width: 200px; border-radius: 14px; font-size: 16px; }
+.btn-accent {
+background: var(--accent); color: #fff; border: none; border-radius: 14px;
+padding: 0 22px; font-weight: 800; cursor: pointer; min-height: 44px;
+transition: transform .15s ease, background .2s ease;
+}
+.btn-accent:hover { background: var(--accent-text); transform: translateY(-1px); }
+.btn-accent:focus-visible, .btn-soft:focus-visible, .link-btn:focus-visible, .btn:focus-visible, input:focus-visible {
+outline: 3px solid var(--mustard); outline-offset: 2px;
+}
+.btn-soft {
+background: #fff; color: var(--accent-text); border: 2px solid var(--accent);
+border-radius: 14px; padding: 10px 16px; font-weight: 700; cursor: pointer;
+transition: background .2s ease;
+}
+.btn-soft:hover { background: #FFF1E6; }
+.btn-whats {
+background: #25D366; color: #0b3d21; border: none; border-radius: 14px;
+padding: 12px 18px; font-weight: 800; text-decoration: none; display: inline-flex;
+align-items: center; gap: 8px; cursor: pointer;
+}
+.btn-whats:hover { background: #1fb75a; }
+.muted-sm { font-size: 13px; color: var(--text-muted); margin: 4px 0 0; }
+.helper { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+.section-title { font-size: 19px; font-weight: 800; margin: 0; }
+.badge-pill {
+display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+background: #FFF1E6; color: var(--accent-text); border: 1px solid #F5C9A9;
+}
+.badge-ok { background: #E6F6EC; color: #1E6B3B; border-color: #B5E3C6; }
+.badge-wait { background: #FFF6E0; color: #7A5200; border-color: #F5DCA0; }
+.badge-mustard { background: #FFF4D9; color: #7A5200; border-color: #F3D68B; }
+.timeline { list-style: none; padding: 0; margin: 14px 0 0; position: relative; }
+.timeline li { position: relative; padding: 0 0 22px 46px; }
+.timeline li:last-child { padding-bottom: 0; }
+.timeline li::before {
+content: ""; position: absolute; left: 13px; top: 28px; bottom: -2px; width: 3px; background: var(--border);
+}
+.timeline li:last-child::before { display: none; }
+.timeline li.done::before { background: var(--accent); }
+.step-dot {
+position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%;
+background: #F4EDE3; border: 3px solid var(--border); display: flex; align-items: center; justify-content: center;
+}
+.timeline li.done .step-dot { background: var(--accent); border-color: var(--accent); color: #fff; }
+.timeline li.current .step-dot { background: var(--mustard); border-color: var(--mustard); color: var(--charcoal); box-shadow: 0 0 0 5px rgba(232,163,61,0.25); }
+.step-title { font-weight: 800; margin: 0; font-size: 16px; }
+.step-meta { font-size: 13px; color: var(--text-muted); margin: 2px 0 0; }
+.step-note { font-size: 13px; color: var(--charcoal); background: #FFF8EC; border-radius: 10px; padding: 6px 10px; margin-top: 6px; display: inline-block; }
+.pending-text { color: #9A9088; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; margin-top: 12px; }
+.info-grid .lbl { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+.info-grid .val { font-size: 15px; font-weight: 700; margin-top: 2px; }
+.hero-eta {
+background: linear-gradient(135deg, #FFF1E6 0%, #FFF8EC 100%);
+border: 1px solid #F5C9A9; border-radius: var(--radius); padding: 18px 22px;
+}
+.hero-eta .big { font-size: 26px; font-weight: 800; color: var(--accent-text); margin: 4px 0 0; }
+.hero-eta .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; font-weight: 800; color: var(--text-muted); }
+.not-found {
+background: #FFF8EC; border: 1px dashed #E8C49A; border-radius: var(--radius); padding: 18px; color: var(--charcoal);
+}
+.grid-2 { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 22px; }
+@media (min-width: 860px) { .grid-2 { grid-template-columns: 1.1fr 0.9fr; } }
+.kpi-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (min-width: 720px) { .kpi-row { grid-template-columns: repeat(4, 1fr); } }
+.kpi-box { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 14px; box-shadow: 0 6px 18px rgba(46,42,39,0.05); }
+.kpi-box .n { font-size: 26px; font-weight: 800; color: var(--accent-text); }
+.kpi-box .l { font-size: 12px; color: var(--text-muted); font-weight: 700; }
+.kpi-box .c { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.chip {
+background: #fff; border: 1px solid #F0D8BF; color: var(--charcoal); border-radius: 999px;
+padding: 6px 12px; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); }
+.delivery-list { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+.delivery-item { border: 1px solid var(--border); border-radius: 16px; padding: 16px; background: #FFFDF9; }
+.delivery-head { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
+.delivery-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 800; color: var(--accent-text); font-size: 15px; }
+.step-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.step-buttons .btn-soft { padding: 8px 12px; font-size: 13px; }
+.step-buttons .btn-soft:disabled { opacity: .5; cursor: not-allowed; }
+.field-label { font-weight: 700; font-size: 14px; display: block; margin-bottom: 4px; }
+.input-mini {
+width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid #E4D3BE; font-family: inherit; font-size: 15px; background: #fff; color: var(--charcoal);
+}
+.form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+.form-grid .full { grid-column: 1 / -1; }
+.hidden { display: none !important; }
+.foot-bruno { background: none; border: none; color: var(--accent-text); font-weight: 700; text-decoration: underline; cursor: pointer; font-size: 14px; font-family: inherit; }
+.foot-bruno:focus-visible { outline: 3px solid var(--mustard); }
+.page-footer { background: var(--charcoal); color: #F7EFE4; padding: 26px 0; margin-top: 36px; border-radius: 28px 28px 0 0; }
+.page-footer p { margin: 0; font-size: 14px; line-height: 1.6; }
+.page-footer .foot-line { color: #E9DCC9; }
+.gate-card { max-width: 440px; margin: 20px auto 0; }
+.gate-error { color: #8A2B12; font-weight: 700; font-size: 14px; margin-top: 8px; }
+.stack-gap { display: flex; flex-direction: column; gap: 14px; }
+.row-wrap { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.space-between { justify-content: space-between; }
+.tiny-link { font-size: 13px; color: var(--accent-text); font-weight: 700; background: none; border: none; cursor: pointer; font-family: inherit; text-decoration: underline; }
+.empty-msg { color: var(--text-muted); font-size: 14px; padding: 12px 0; }
+.mt-16 { margin-top: 16px; }
+.mt-28 { margin-top: 28px; }
+@media print { .brand-header, .page-footer, .no-print { display: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="brand-header">
+<div class="shell-container">
+<div class="brand-row">
+<div>
+<span class="eyebrow-pill">Transporte com confiança</span>
+<h1 class="brand-title">Bruninho Lima Express</h1>
+<p class="brand-sub">Entregas com Confiança</p>
+</div>
+<div class="row-wrap no-print">
+<button class="btn-soft" id="btnPrintTrack" type="button" onclick="window.print()" style="background:#fff;">Imprimir rastreio</button>
+<button class="btn-soft" id="btnShareSite" type="button" style="background:#fff;">Compartilhar</button>
+</div>
+</div>
+</div>
+</header>
+
+<main class="shell-container" style="padding: 0 16px;">
+
+<section id="clientArea" aria-labelledby="clientTitle">
+<div class="card-float search-card">
+<div class="mascot-wrap">
+<svg viewBox="0 0 200 170" role="img" aria-label="Bruno, entregador sorridente de jaqueta terracota em uma moto prata">
+<ellipse cx="100" cy="158" rx="78" ry="7" fill="#EFE2D0"/>
+<circle cx="52" cy="128" r="26" fill="#2E2A27"/>
+<circle cx="52" cy="128" r="12" fill="#9AA0A6"/>
+<circle cx="150" cy="128" r="26" fill="#2E2A27"/>
+<circle cx="150" cy="128" r="12" fill="#9AA0A6"/>
+<path d="M52 128 L92 110 L125 110 L150 128" stroke="#A7ADB3" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M92 110 L100 88 L122 88" stroke="#A7ADB3" stroke-width="6" fill="none" stroke-linecap="round"/>
+<rect x="60" y="98" width="46" height="13" rx="6" fill="#C7CDD3"/>
+<path d="M108 58 Q120 52 128 64 L132 92 Q120 100 102 96 Z" fill="#C1502E"/>
+<path d="M84 62 Q96 50 116 56 L118 92 Q98 98 82 90 Z" fill="#C1502E"/>
+<rect x="92" y="90" width="22" height="18" rx="4" fill="#E07A3F"/>
+<path d="M82 66 L70 96" stroke="#C1502E" stroke-width="12" stroke-linecap="round"/>
+<path d="M118 66 L134 94" stroke="#C1502E" stroke-width="12" stroke-linecap="round"/>
+<circle cx="100" cy="40" r="20" fill="#F2C29B"/>
+<path d="M80 36 Q84 18 100 18 Q118 18 120 36 Q112 26 100 28 Q88 26 80 36 Z" fill="#8C8A87"/>
+<path d="M82 46 Q88 64 100 60 Q112 64 118 46 Q112 56 100 54 Q88 56 82 46 Z" fill="#9B9A97"/>
+<circle cx="93" cy="41" r="2.4" fill="#2E2A27"/>
+<circle cx="107" cy="41" r="2.4" fill="#2E2A27"/>
+<path d="M94 52 Q100 57 106 52" stroke="#2E2A27" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<rect x="72" y="20" width="56" height="8" rx="4" fill="#E8A33D"/>
+</svg>
+<div style="flex:1;">
+<h2 id="clientTitle" class="section-title" style="font-size:22px;">Onde está a sua encomenda?</h2>
+<p class="muted-sm">Digite o código de rastreio enviado pelo Bruno no WhatsApp.</p>
+<form id="trackForm" class="search-row" autocomplete="off" novalidate>
+<label for="trackInput" class="sr-only" style="position:absolute;left:-9999px;">Código de rastreio</label>
+<input class="input-mini" id="trackInput" type="text" placeholder="Digite o código de rastreio (ex.: BL-1042)" maxlength="12" aria-describedby="trackHelp">
+<button class="btn-accent" type="submit">Rastrear</button>
+</form>
+<p id="trackHelp" class="helper">Formato do código: BL seguido de 4 caracteres. Use as letras e números exatamente como recebeu.</p>
+<div class="preset-row" aria-label="Códigos de exemplo">
+<span class="helper" style="margin-top:4px;">Exemplos:</span>
+<button class="chip" type="button" data-sample="BL-1042">BL-1042</button>
+<button class="chip" type="button" data-sample="BL-1043">BL-1043</button>
+<button class="chip" type="button" data-sample="BL-1044">BL-1044</button>
+</div>
+</div>
+</div>
+</div>
+
+<div id="trackResult" class="mt-28" aria-live="polite"></div>
+
+<div class="mt-28" style="max-width:720px;margin-left:auto;margin-right:auto;">
+<div class="card-float" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;">
+<div>
+<h3 class="section-title">Precisa de ajuda com a entrega?</h3>
+<p class="muted-sm">Fale direto com o Bruno, de segunda a sábado, em horário comercial.</p>
+</div>
+<a class="btn-whats" href="https://wa.me/5519978049090" target="_blank" rel="noopener">Falar com o Bruno no WhatsApp</a>
+</div>
+</div>
+
+<div class="kpi-row mt-28" style="max-width:900px;margin-left:auto;margin-right:auto;" id="publicKpis" aria-label="Indicadores de atendimento"></div>
+</section>
+
+<section id="adminArea" class="hidden" aria-labelledby="adminTitle">
+<div class="mt-28"></div>
+<div class="card-float" id="gateCard">
+<h2 id="adminTitle" class="section-title">Área do Bruno</h2>
+<p class="muted-sm">Acesso restrito ao entregador. Digite a senha para cadastrar e atualizar entregas.</p>
+<form id="gateForm" class="stack-gap mt-16" novalidate>
+<div>
+<label class="field-label" for="gatePass">Senha de acesso</label>
+<input class="input-mini" id="gatePass" type="password" placeholder="Digite a senha" autocomplete="current-password" aria-describedby="gateHelp">
+<p id="gateHelp" class="helper">Senha informada pelo Bruno. Você pode sair a qualquer momento.</p>
+<p id="gateError" class="gate-error hidden" role="alert">Senha incorreta. Tente novamente.</p>
+</div>
+<div class="row-wrap">
+<button class="btn-accent" type="submit">Entrar</button>
+<button class="btn-soft" type="button" id="btnBackClient">Voltar ao rastreio</button>
+</div>
+</form>
+</div>
+
+<div id="panelArea" class="hidden">
+<div class="row-wrap space-between mt-16">
+<div>
+<h2 class="section-title" style="font-size:22px;">Painel do entregador</h2>
+<p class="muted-sm">Crie entregas, avance as etapas e copie o link de rastreio para o cliente.</p>
+</div>
+<div class="row-wrap">
+<span class="badge-pill" id="activeCountBadge">0 em andamento</span>
+<button class="btn-soft" type="button" id="btnLogout">Sair</button>
+</div>
+</div>
+
+<div class="kpi-row mt-16" id="adminKpis"></div>
+
+<div class="grid-2">
+<div class="card-float">
+<h3 class="section-title">Nova entrega</h3>
+<p class="muted-sm">O código BL-XXXX é gerado automaticamente e a etapa "Coletado" recebe a data e hora atual.</p>
+<form id="newForm" class="form-grid mt-16" novalidate>
+<div>
+<label class="field-label" for="fName">Nome do destinatário</label>
+<input class="input-mini" id="fName" type="text" placeholder="Ex.: Padaria Pão Quente" autocomplete="off">
+</div>
+<div>
+<label class="field-label" for="fCity">Cidade</label>
+<input class="input-mini" id="fCity" type="text" placeholder="Ex.: Indaiatuba" value="Indaiatuba">
+</div>
+<div class="full">
+<label class="field-label" for="fAddr">Endereço ou bairro</label>
+<input class="input-mini" id="fAddr" type="text" placeholder="Ex.: Rua das Flores, 120 — Centro">
+<p class="helper">Informe rua e número, ou só o bairro para entregas em bairros.</p>
+</div>
+<div class="full">
+<label class="field-label" for="fVolume">Descrição do volume</label>
+<input class="input-mini" id="fVolume" type="text" placeholder="Ex.: Caixa pequena, 1 kg">
+</div>
+<div class="full">
+<label class="field-label" for="fEta">Previsão de entrega</label>
+<input class="input-mini" id="fEta" type="text" placeholder="Ex.: Hoje até 17h">
+<div class="preset-row">
+<button type="button" class="chip" data-eta="Hoje até 17h">Hoje até 17h</button>
+<button type="button" class="chip" data-eta="Amanhã até 12h">Amanhã até 12h</button>
+<button type="button" class="chip" data-eta="Em 2 dias úteis">Em 2 dias úteis</button>
+</div>
+</div>
+<div class="full row-wrap">
+<button class="btn-accent" type="submit">Salvar entrega</button>
+<button class="btn-soft" type="button" id="btnResetForm">Limpar campos</button>
+</div>
+</form>
+</div>
+
+<div class="card-float">
+<h3 class="section-title">Entregas cadastradas</h3>
+<p class="muted-sm">Avance a etapa conforme a entrega acontece. Cada clique grava data e hora.</p>
+<div class="row-wrap mt-16">
+<input class="input-mini" id="searchAdmin" type="search" placeholder="Buscar por código, nome ou bairro" style="max-width:320px;">
+</div>
+<div class="delivery-list" id="deliveryList"></div>
+</div>
+</div>
+
+<div class="card-float mt-28">
+<div class="row-wrap space-between">
+<div>
+<h3 class="section-title">Resumo do dia</h3>
+<p class="muted-sm">Atualizado conforme as etapas são marcadas.</p>
+</div>
+<div class="row-wrap">
+<button class="btn-soft" type="button" id="btnCopyLast">Copiar último link</button>
+<button class="btn-soft" type="button" id="btnExportTxt">Exportar lista (.txt)</button>
+<button class="btn-soft" type="button" id="btnClearDemo">Restaurar demonstração</button>
+</div>
+</div>
+<div id="dailySummary" class="stack-gap mt-16"></div>
+</div>
+</div>
+</section>
+
+</main>
+
+<dialog class="dialog" id="copyDialog">
+<div>
+<header>
+<h2>Link de rastreio pronto</h2>
+<p>Cole no WhatsApp do cliente para ele acompanhar a entrega.</p>
+</header>
+<section>
+<textarea class="input-mini" id="copyText" rows="4" readonly style="width:100%;"></textarea>
+</section>
+<footer class="row-wrap" style="justify-content:flex-end;margin-top:14px;">
+<button class="btn-soft" type="button" data-dialog-close>Fechar</button>
+<button class="btn-accent" type="button" id="btnCopyDialogOk">Copiar texto</button>
+</footer>
+</div>
+</dialog>
+
+<footer class="page-footer">
+<div class="shell-container">
+<p><strong>Bruninho Lima Express — Transporte de pequenos volumes com confiabilidade.</strong></p>
+<p class="foot-line">Indaiatuba e região, até 300 km. WhatsApp (19) 97804-9090.</p>
+<p class="mt-16" style="margin-top:12px;">
+<button class="foot-bruno" type="button" id="btnOpenAdmin">Área do Bruno</button>
+</p>
+</div>
+</footer>
+
+<script>
+(function () {
+var STORE_KEY = 'bruninho_entregas_v1';
+var SESSION_KEY = 'bruninho_sessao_v1';
+var PASSWORD = 'bruno2026';
+var STAGES = [
+{ id: 'coletado', label: 'Coletado' },
+{ id: 'rota', label: 'Em rota' },
+{ id: 'saiu', label: 'Saiu para entrega' },
+{ id: 'entregue', label: 'Entregue' }
+];
+var ADMIN_BUTTONS = [
+{ idx: 1, label: 'Marcar em rota' },
+{ idx: 2, label: 'Marcar saiu para entrega' },
+{ idx: 3, label: 'Marcar entregue' }
+];
+
+function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+function nowStamp() {
+var d = new Date();
+return pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+}
+function el(tag, cls, text) {
+var n = document.createElement(tag);
+if (cls) n.className = cls;
+if (text !== undefined && text !== null) n.textContent = text;
+return n;
+}
+function normCode(s) { return (s || '').trim().toUpperCase(); }
+function genCode(existing) {
+var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+var code, tries = 0;
+do {
+var s = '';
+for (var i = 0; i < 4; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+code = 'BL-' + s;
+tries++;
+} while (existing.some(function (e) { return e.codigo === code; }) && tries < 200);
+return code;
+}
+
+var defaultData = [
+{
+codigo: 'BL-1042', destinatario: 'Farmácia São João', endereco: 'Centro', cidade: 'Indaiatuba',
+volume: 'Documentos e exames', previsao: 'Entregue hoje até 11h', etapa: 3, observacao: '',
+historico: [
+{ etapa: 0, quando: '14/05 08:15', obs: '' },
+{ etapa: 1, quando: '14/05 08:52', obs: '' },
+{ etapa: 2, quando: '14/05 09:40', obs: 'Trânsito leve na Av. Presidente Vargas' },
+{ etapa: 3, quando: '14/05 10:18', obs: 'Recebido pela recepcionista' }
+]
+},
+{
+codigo: 'BL-1043', destinatario: 'Escritório Contábil Almeida', endereco: 'Cidade Nova', cidade: 'Indaiatuba',
+volume: 'Malote de documentos', previsao: 'Hoje até 17h', etapa: 1, observacao: '',
+historico: [
+{ etapa: 0, quando: '15/05 13:05', obs: '' },
+{ etapa: 1, quando: '15/05 13:40', obs: 'Saiu da coleta, a caminho do bairro' }
+]
+},
+{
+codigo: 'BL-1044', destinatario: 'Distribuidora Vale Verde', endereco: 'Jardim Morada do Sol', cidade: 'Indaiatuba',
+volume: 'Pequeno volume, 2 kg', previsao: 'Amanhã até 12h', etapa: 0, observacao: '',
+historico: [
+{ etapa: 0, quando: '15/05 15:20', obs: '' }
+]
+}
+];
+
+function loadData() {
+try {
+var raw = localStorage.getItem(STORE_KEY);
+if (!raw) return JSON.parse(JSON.stringify(defaultData));
+var parsed = JSON.parse(raw);
+if (!Array.isArray(parsed)) return JSON.parse(JSON.stringify(defaultData));
+return parsed;
+} catch (e) {
+return JSON.parse(JSON.stringify(defaultData));
+}
+}
+function saveData(list) {
+try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); } catch (e) {}
+}
+var data = loadData();
+
+function isLogged() {
+try { return localStorage.getItem(SESSION_KEY) === 'ok'; } catch (e) { return false; }
+}
+function setLogged(v) {
+try {
+if (v) localStorage.setItem(SESSION_KEY, 'ok');
+else localStorage.removeItem(SESSION_KEY);
+} catch (e) {}
+}
+
+function findByCode(code) {
+var c = normCode(code);
+for (var i = 0; i < data.length; i++) if (data[i].codigo === c) return data[i];
+return null;
+}
+
+function renderTrack(code) {
+var box = document.getElementById('trackResult');
+box.replaceChildren();
+var c = normCode(code);
+if (!c) {
+var hint = el('div', 'card-float');
+hint.appendChild(el('p', 'empty-msg', 'Digite um código para ver a linha do tempo da entrega.'));
+box.appendChild(hint);
+return;
+}
+var item = findByCode(c);
+if (!item) {
+var nf = el('div', 'not-found');
+nf.appendChild(el('h3', 'section-title', 'Código não encontrado'));
+nf.appendChild(el('p', 'muted-sm', 'Código não encontrado. Confira o código enviado pelo Bruno no WhatsApp.'));
+box.appendChild(nf);
+return;
+}
+
+var grid = el('div', 'grid-2');
+grid.style.marginTop = '0';
+
+var left = el('div', 'card-float');
+var head = el('div', 'row-wrap space-between');
+var titleBox = el('div');
+titleBox.appendChild(el('p', 'helper', 'Código de rastreio'));
+titleBox.appendChild(el('h2', 'section-title', item.codigo));
+head.appendChild(titleBox);
+var stLabel = STAGES[item.etapa].label;
+var badgeCls = item.etapa === 3 ? 'badge-pill badge-ok' : 'badge-pill badge-mustard';
+head.appendChild(el('span', badgeCls, stLabel));
+left.appendChild(head);
+
+var ul = el('ol', 'timeline');
+ul.setAttribute('aria-label', 'Linha do tempo da entrega');
+STAGES.forEach(function (st, idx) {
+var li = el('li');
+var cls = idx < item.etapa ? 'done' : (idx === item.etapa ? 'current' : '');
+if (cls) li.className = cls;
+var dot = el('span', 'step-dot');
+dot.textContent = idx < item.etapa || (idx === item.etapa && item.etapa === 3) ? '✓' : (idx === item.etapa ? '•' : '');
+li.appendChild(dot);
+var hist = item.historico.filter(function (h) { return h.etapa === idx; })[0];
+var title = el('p', 'step-title' + (idx > item.etapa ? ' pending-text' : ''), st.label);
+li.appendChild(title);
+if (hist) {
+li.appendChild(el('p', 'step-meta', hist.quando));
+if (hist.obs) li.appendChild(el('span', 'step-note', hist.obs));
+} else {
+li.appendChild(el('p', 'step-meta pending-text', 'Pendente'));
+}
+ul.appendChild(li);
+});
+left.appendChild(ul);
+
+var right = el('div', 'stack-gap');
+var card = el('div', 'card-float');
+card.appendChild(el('h3', 'section-title', 'Dados da entrega'));
+card.appendChild(el('p', 'muted-sm', 'Informações registradas no momento da coleta.'));
+var info = el('div', 'info-grid');
+var fields = [
+['Destinatário', item.destinatario],
+['Bairro / endereço', item.endereco],
+['Cidade', item.cidade],
+['Volume', item.volume]
+];
+fields.forEach(function (f) {
+var w = el('div');
+w.appendChild(el('div', 'lbl', f[0]));
+w.appendChild(el('div', 'val', f[1]));
+info.appendChild(w);
+});
+card.appendChild(info);
+right.appendChild(card);
+
+var eta = el('div', 'hero-eta');
+eta.appendChild(el('div', 'lbl', 'Previsão de entrega'));
+eta.appendChild(el('p', 'big', item.previsao));
+eta.appendChild(el('p', 'helper', item.etapa === 3 ? 'Entrega concluída com sucesso.' : 'Atualizamos esta previsão sempre que houver mudança de etapa.'));
+right.appendChild(eta);
+
+var actions = el('div', 'card-float');
+actions.appendChild(el('h3', 'section-title', 'Precisa de ajuda?'));
+actions.appendChild(el('p', 'muted-sm', 'Mande uma mensagem com o código para agilizar o atendimento.'));
+var wa = el('a', 'btn-whats', 'Falar com o Bruno no WhatsApp');
+wa.href = 'https://wa.me/5519978049090?text=' + encodeURIComponent('Olá Bruno, quero saber da entrega ' + item.codigo);
+wa.target = '_blank';
+wa.rel = 'noopener';
+actions.appendChild(wa);
+var copyBtn = el('button', 'btn-soft mt-16', 'Copiar código');
+copyBtn.type = 'button';
+copyBtn.style.marginTop = '12px';
+copyBtn.addEventListener('click', function () {
+copyText(item.codigo);
+window.skipUI.toast('Código ' + item.codigo + ' copiado!', { type: 'success' });
+});
+actions.appendChild(copyBtn);
+right.appendChild(actions);
+
+grid.appendChild(left);
+grid.appendChild(right);
+box.appendChild(grid);
+}
+
+function copyText(txt) {
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(txt).catch(function () { fallbackCopy(txt); });
+} else {
+fallbackCopy(txt);
+}
+}
+function fallbackCopy(txt) {
+var ta = document.createElement('textarea');
+ta.value = txt;
+document.body.appendChild(ta);
+ta.select();
+try { document.execCommand('copy'); } catch (e) {}
+document.body.removeChild(ta);
+}
+
+function trackUrl(code) {
+return window.location.origin + window.location.pathname + '?codigo=' + encodeURIComponent(code);
+}
+
+function renderPublicKpis() {
+var box = document.getElementById('publicKpis');
+box.replaceChildren();
+var total = data.length;
+var done = data.filter(function (d) { return d.etapa === 3; }).length;
+var route = data.filter(function (d) { return d.etapa >= 1 && d.etapa < 3; }).length;
+var kpis = [
+['Entregas no sistema', total, 'Cadastradas hoje'],
+['Concluídas', done, 'Entregues com sucesso'],
+['Em andamento', route, 'Em rota ou aguardando'],
+['Raio de atendimento', '300 km', 'Indaiatuba e região']
+];
+kpis.forEach(function (k) {
+var b = el('div', 'kpi-box');
+b.appendChild(el('div', 'n', String(k[1])));
+b.appendChild(el('div', 'l', k[0]));
+b.appendChild(el('div', 'c', k[2]));
+box.appendChild(b);
+});
+}
+
+function renderAdminKpis() {
+var box = document.getElementById('adminKpis');
+box.replaceChildren();
+var coletado = data.filter(function (d) { return d.etapa === 0; }).length;
+var emRota = data.filter(function (d) { return d.etapa === 1 || d.etapa === 2; }).length;
+var entregues = data.filter(function (d) { return d.etapa === 3; }).length;
+var kpis = [
+['Total cadastradas', data.length, 'Entregas registradas'],
+['Coletadas', coletado, 'Aguardando saída'],
+['Em trânsito', emRota, 'Na rua agora'],
+['Entregues', entregues, 'Concluídas']
+];
+kpis.forEach(function (k) {
+var b = el('div', 'kpi-box');
+b.appendChild(el('div', 'n', String(k[1])));
+b.appendChild(el('div', 'l', k[0]));
+b.appendChild(el('div', 'c', k[2]));
+box.appendChild(b);
+});
+var badge = document.getElementById('activeCountBadge');
+badge.textContent = emRota + ' em andamento';
+}
+
+function advanceStage(item, idx, obs) {
+item.etapa = idx;
+item.observacao = obs || item.observacao || '';
+item.historico.push({ etapa: idx, quando: nowStamp(), obs: obs || '' });
+saveData(data);
+}
+
+function renderAdminList(filter) {
+var list = document.getElementById('deliveryList');
+list.replaceChildren();
+var q = (filter || '').trim().toLowerCase();
+var items = data.filter(function (d) {
+if (!q) return true;
+return d.codigo.toLowerCase().indexOf(q) >= 0 ||
+d.destinatario.toLowerCase().indexOf(q) >= 0 ||
+d.endereco.toLowerCase().indexOf(q) >= 0;
+});
+if (!items.length) {
+list.appendChild(el('p', 'empty-msg', 'Nenhuma entrega encontrada. Ajuste a busca ou cadastre uma nova entrega.'));
+return;
+}
+items.forEach(function (item) {
+var wrap = el('div', 'delivery-item');
+var head = el('div', 'delivery-head');
+var left = el('div');
+left.appendChild(el('span', 'delivery-code', item.codigo));
+left.appendChild(el('p', 'step-title', item.destinatario));
+left.appendChild(el('p', 'step-meta', item.endereco + ' · ' + item.cidade + ' · ' + item.volume));
+head.appendChild(left);
+head.appendChild(el('span', item.etapa === 3 ? 'badge-pill badge-ok' : 'badge-pill badge-mustard', STAGES[item.etapa].label));
+wrap.appendChild(head);
+
+var obsRow = el('div', 'row-wrap', null);
+obsRow.style.marginTop = '10px';
+var obsInput = el('input', 'input-mini');
+obsInput.type = 'text';
+obsInput.placeholder = 'Observação (ex.: cliente ausente, reagendado)';
+obsInput.value = item.observacao || '';
+obsInput.setAttribute('aria-label', 'Observação da entrega ' + item.codigo);
+obsInput.style.flex = '1';
+obsInput.style.minWidth = '220px';
+obsRow.appendChild(obsInput);
+var saveObs = el('button', 'btn-soft', 'Salvar observação');
+saveObs.type = 'button';
+saveObs.addEventListener('click', function () {
+item.observacao = obsInput.value.trim();
+saveData(data);
+window.skipUI.toast('Observação salva para ' + item.codigo + '.', { type: 'success' });
+renderAll();
+});
+obsRow.appendChild(saveObs);
+wrap.appendChild(obsRow);
+
+var btns = el('div', 'step-buttons');
+ADMIN_BUTTONS.forEach(function (b) {
+var btn = el('button', 'btn-soft', b.label);
+btn.type = 'button';
+var done = item.etapa >= b.idx;
+if (done) btn.disabled = true;
+btn.addEventListener('click', function () {
+advanceStage(item, b.idx, obsInput.value.trim());
+window.skipUI.toast(item.codigo + ': ' + STAGES[b.idx].label + ' registrado às ' + nowStamp().split(' ')[1] + '.', { type: 'success' });
+renderAll();
+});
+btns.appendChild(btn);
+});
+var copyLink = el('button', 'btn-soft', 'Copiar link de rastreio');
+copyLink.type = 'button';
+copyLink.addEventListener('click', function () {
+openCopyDialog(item.codigo);
+});
+btns.appendChild(copyLink);
+wrap.appendChild(btns);
+
+list.appendChild(wrap);
+});
+}
+
+function renderDailySummary() {
+var box = document.getElementById('dailySummary');
+box.replaceChildren();
+var last = data.slice().sort(function (a, b) {
+var ha = a.historico[a.historico.length - 1];
+var hb = b.historico[b.historico.length - 1];
+return (hb ? hb.quando : '').localeCompare(ha ? ha.quando : '');
+});
+var head = el('p', 'helper', 'Últimas movimentações registradas');
+box.appendChild(head);
+last.slice(0, 5).forEach(function (item) {
+var row = el('div', 'row-wrap space-between');
+row.style.borderBottom = '1px dashed var(--border)';
+row.style.paddingBottom = '8px';
+var left = el('span', '', item.codigo + ' · ' + item.destinatario);
+left.style.fontWeight = '700';
+row.appendChild(left);
+var last = item.historico[item.historico.length - 1];
+row.appendChild(el('span', 'step-meta', STAGES[item.etapa].label + (last ? ' — ' + last.quando : '')));
+box.appendChild(row);
+});
+}
+
+function renderAll() {
+renderPublicKpis();
+if (isLogged()) {
+renderAdminKpis();
+renderAdminList(document.getElementById('searchAdmin').value);
+renderDailySummary();
+}
+}
+
+var currentCopyCode = '';
+function openCopyDialog(code) {
+currentCopyCode = code;
+var txt = 'Olá! Seu pedido ' + code + ' está sendo acompanhado pela Bruninho Lima Express. Acompanhe pelo link: ' + trackUrl(code);
+document.getElementById('copyText').value = txt;
+document.getElementById('copyDialog').showModal();
+}
+
+function showAdminScreen(logged) {
+document.getElementById('gateCard').classList.toggle('hidden', logged);
+document.getElementById('panelArea').classList.toggle('hidden', !logged);
+document.getElementById('adminArea').classList.remove('hidden');
+if (logged) renderAll();
+}
+
+function openAdmin() {
+var adm = document.getElementById('adminArea');
+adm.classList.remove('hidden');
+showAdminScreen(isLogged());
+adm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeAdmin() {
+document.getElementById('adminArea').classList.add('hidden');
+window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('trackForm').addEventListener('submit', function (e) {
+e.preventDefault();
+var v = document.getElementById('trackInput').value;
+renderTrack(v);
+if (!normCode(v)) window.skipUI.toast('Digite o código de rastreio para continuar.', { type: 'error' });
+});
+
+document.querySelectorAll('[data-sample]').forEach(function (b) {
+b.addEventListener('click', function () {
+var code = b.getAttribute('data-sample');
+document.getElementById('trackInput').value = code;
+renderTrack(code);
+window.skipUI.toast('Exemplo ' + code + ' carregado.');
+});
+});
+
+document.getElementById('btnShareSite').addEventListener('click', function () {
+var url = window.location.origin + window.location.pathname;
+copyText(url);
+window.skipUI.toast('Link do rastreio copiado para compartilhar.', { type: 'success' });
+});
+
+document.getElementById('gateForm').addEventListener('submit', function (e) {
+e.preventDefault();
+var p = document.getElementById('gatePass').value;
+var err = document.getElementById('gateError');
+if (p === PASSWORD) {
+setLogged(true);
+err.classList.add('hidden');
+document.getElementById('gatePass').value = '';
+showAdminScreen(true);
+window.skipUI.toast('Bem-vindo, Bruno! Painel liberado.', { type: 'success' });
+} else {
+err.classList.remove('hidden');
+window.skipUI.toast('Senha incorreta.', { type: 'error' });
+}
+});
+
+document.getElementById('btnBackClient').addEventListener('click', closeAdmin);
+document.getElementById('btnOpenAdmin').addEventListener('click', openAdmin);
+
+document.getElementById('btnLogout').addEventListener('click', function () {
+setLogged(false);
+showAdminScreen(false);
+window.skipUI.toast('Você saiu do painel.');
+});
+
+document.querySelectorAll('[data-eta]').forEach(function (b) {
+b.addEventListener('click', function () {
+document.getElementById('fEta').value = b.getAttribute('data-eta');
+});
+});
+
+document.getElementById('newForm').addEventListener('submit', function (e) {
+e.preventDefault();
+var nome = document.getElementById('fName').value.trim();
+var end = document.getElementById('fAddr').value.trim();
+var cidade = document.getElementById('fCity').value.trim();
+var vol = document.getElementById('fVolume').value.trim();
+var eta = document.getElementById('fEta').value.trim();
+if (!nome || !end || !cidade || !vol) {
+window.skipUI.toast('Preencha destinatário, endereço, cidade e volume.', { type: 'error' });
+return;
+}
+var code = genCode(data);
+var item = {
+codigo: code,
+destinatario: nome,
+endereco: end,
+cidade: cidade,
+volume: vol,
+previsao: eta || 'A combinar',
+etapa: 0,
+observacao: '',
+historico: [{ etapa: 0, quando: nowStamp(), obs: '' }]
+};
+data.unshift(item);
+saveData(data);
+document.getElementById('newForm').reset();
+document.getElementById('fCity').value = 'Indaiatuba';
+window.skipUI.toast('Entrega ' + code + ' criada com status Coletado.', { type: 'success' });
+renderAll();
+openCopyDialog(code);
+});
+
+document.getElementById('btnResetForm').addEventListener('click', function () {
+document.getElementById('newForm').reset();
+document.getElementById('fCity').value = 'Indaiatuba';
+window.skipUI.toast('Campos limpos.');
+});
+
+document.getElementById('searchAdmin').addEventListener('input', function (e) {
+renderAdminList(e.target.value);
+});
+
+document.getElementById('btnCopyLast').addEventListener('click', function () {
+if (!data.length) { window.skipUI.toast('Não há entregas para copiar.', { type: 'error' }); return; }
+openCopyDialog(data[0].codigo);
+});
+
+document.getElementById('btnExportTxt').addEventListener('click', function () {
+var lines = data.map(function (d) {
+return d.codigo + ' | ' + d.destinatario + ' | ' + d.endereco + ', ' + d.cidade + ' | ' + STAGES[d.etapa].label + ' | ' + d.previsao;
+});
+var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+var a = document.createElement('a');
+a.href = URL.createObjectURL(blob);
+a.download = 'entregas-bruninho-lima.txt';
+document.body.appendChild(a);
+a.click();
+setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+window.skipUI.toast('Lista exportada em arquivo de texto.', { type: 'success' });
+});
+
+document.getElementById('btnClearDemo').addEventListener('click', function () {
+data = JSON.parse(JSON.stringify(defaultData));
+saveData(data);
+window.skipUI.toast('Demonstração restaurada com 3 entregas de exemplo.', { type: 'success' });
+renderAll();
+});
+
+document.getElementById('btnCopyDialogOk').addEventListener('click', function () {
+copyText(document.getElementById('copyText').value);
+window.skipUI.toast('Mensagem copiada! Cole no WhatsApp do cliente.', { type: 'success' });
+});
+
+document.getElementById('btnPrintTrack').addEventListener('click', function (e) {
+e.preventDefault();
+window.print();
+});
+
+function readQueryCode() {
+try {
+var p = new URLSearchParams(window.location.search);
+return p.get('codigo') || '';
+} catch (e) { return ''; }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+renderPublicKpis();
+var fromUrl = readQueryCode();
+if (fromUrl) {
+document.getElementById('trackInput').value = normCode(fromUrl);
+renderTrack(fromUrl);
+} else {
+renderTrack('');
+}
+if (isLogged()) {
+document.getElementById('adminArea').classList.remove('hidden');
+}
+});
+})();
+</script>
+</body>
+</html>

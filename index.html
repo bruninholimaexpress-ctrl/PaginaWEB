@@ -6,7 +6,7 @@
 <title>Bruninho Lima Express — Rastreio de Entregas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Inter:wght@400;500;600;700&display=swap">
 <style>
 /* Skip artifact shell — fixed styles served beside every artifact.
    Tokens, utilities and components (basecoat 1.0 markup, no CDN); artifacts
@@ -1033,931 +1033,1110 @@ table.shell-table td.skip-table-empty { color: var(--text-muted); text-align: ce
 </script>
 <style>
 :root {
---accent: #C1502E;
---accent-text: #A8431F;
---accent-contrast: #ffffff;
---mustard: #E8A33D;
---orange: #E07A3F;
---cream: #FDF6EC;
---charcoal: #2E2A27;
---bg: #FDF6EC;
---surface: #ffffff;
---text: #2E2A27;
---text-muted: #6B625B;
---border: #EFE2D0;
---radius: 18px;
-font-family: "Nunito", "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+--accent: #B8442A;
+--accent-text: #9A3520;
+--accent-contrast: #FFFFFF;
+--terracota: #B8442A;
+--laranja: #E07A3F;
+--mostarda: #E8A33D;
+--creme: #FDF6EC;
+--pessego: #F9DCC4;
+--carvao: #221E1B;
+--font-display: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
+--font-body: "Inter", system-ui, -apple-system, sans-serif;
+--shadow-soft: 0 18px 40px -18px rgba(34, 30, 27, 0.28);
+--shadow-strong: 0 34px 70px -22px rgba(120, 45, 20, 0.45);
 }
+html { scroll-behavior: smooth; }
 body {
-background: var(--cream);
-color: var(--charcoal);
-font-family: "Nunito", "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
-min-height: 100vh;
+font-family: var(--font-body);
+background: var(--creme);
+color: var(--carvao);
+line-height: 1.6;
+margin: 0;
 }
-h1, h2, h3, h4 { font-family: "Nunito", "Poppins", system-ui, sans-serif; color: var(--charcoal); }
-.brand-header {
-background: linear-gradient(135deg, #C1502E 0%, #E07A3F 60%, #E8A33D 100%);
-color: #fff;
-border-radius: 0 0 28px 28px;
-padding: 28px 0 90px;
-position: relative;
+h1, h2, h3, .brand-name {
+font-family: var(--font-display);
+letter-spacing: -0.03em;
 }
-.brand-header .muted { color: rgba(255,255,255,0.9); }
-.eyebrow-pill {
-display: inline-block;
-background: rgba(255,255,255,0.2);
-color: #fff;
-padding: 4px 14px;
+:focus-visible {
+outline: 3px solid var(--mostarda);
+outline-offset: 3px;
+border-radius: 6px;
+}
+a { color: var(--accent-text); }
+
+/* Header */
+.top-bar {
+position: sticky;
+top: 0;
+z-index: 40;
+background: rgba(253, 246, 236, 0.92);
+backdrop-filter: blur(12px);
+border-bottom: 1px solid rgba(34, 30, 27, 0.08);
+}
+.brand {
+display: flex;
+align-items: center;
+gap: 10px;
+text-decoration: none;
+color: var(--carvao);
+}
+.logo-circle {
+width: 44px;
+height: 44px;
+border-radius: 50%;
+object-fit: cover;
+box-shadow: 0 4px 12px rgba(184, 68, 42, 0.25);
+flex-shrink: 0;
+}
+.wa-link {
+color: var(--accent-text);
+font-weight: 600;
+font-size: 0.9rem;
+text-decoration: none;
+padding: 8px 14px;
 border-radius: 999px;
-font-size: 12px;
+border: 1px solid rgba(184, 68, 42, 0.25);
+transition: background 0.2s ease, transform 0.2s ease;
+}
+.wa-link:hover { background: var(--pessego); transform: translateY(-1px); }
+
+/* Hero */
+.hero {
+position: relative;
+overflow: hidden;
+padding: 56px 0 150px;
+background: linear-gradient(160deg, var(--creme) 0%, #FCE8D6 55%, var(--pessego) 100%);
+}
+.blob {
+position: absolute;
+border-radius: 50%;
+filter: blur(60px);
+opacity: 0.55;
+pointer-events: none;
+}
+.blob-terracota { width: 340px; height: 340px; background: var(--terracota); top: -80px; left: -100px; }
+.blob-mostarda { width: 280px; height: 280px; background: var(--mostarda); bottom: 40px; right: -60px; }
+.hero-grid {
+position: relative;
+display: grid;
+grid-template-columns: 1fr;
+gap: 40px;
+align-items: center;
+}
+@media (min-width: 900px) {
+.hero-grid { grid-template-columns: 1.05fr 0.95fr; gap: 56px; }
+}
+.pill {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+padding: 8px 16px;
+border-radius: 999px;
+background: rgba(255, 255, 255, 0.7);
+border: 1px solid rgba(184, 68, 42, 0.2);
+color: var(--accent-text);
+font-size: 0.85rem;
+font-weight: 600;
+}
+.pill-dot {
+width: 8px; height: 8px; border-radius: 50%;
+background: var(--laranja);
+box-shadow: 0 0 0 4px rgba(224, 122, 63, 0.2);
+}
+.hero h1 {
+font-size: clamp(2.6rem, 6.4vw, 4.6rem);
+line-height: 1.02;
+font-weight: 800;
+margin: 20px 0 22px;
+}
+.highlight {
+color: var(--accent-text);
+position: relative;
+white-space: nowrap;
+}
+.highlight::after {
+content: "";
+position: absolute;
+left: -2%;
+right: -2%;
+bottom: -0.08em;
+height: 0.22em;
+background: var(--mostarda);
+border-radius: 6px;
+z-index: -1;
+transform: skewX(-8deg);
+opacity: 0.85;
+}
+.highlight { z-index: 0; }
+.hero-sub {
+font-size: 1.12rem;
+color: #4A423C;
+max-width: 34rem;
+margin: 0 0 30px;
+}
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn-main, .btn-outline {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+padding: 14px 24px;
+border-radius: 16px;
 font-weight: 700;
-letter-spacing: 0.04em;
-text-transform: uppercase;
+font-size: 1rem;
+text-decoration: none;
+cursor: pointer;
+border: 2px solid transparent;
+transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+font-family: var(--font-body);
 }
-.brand-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.brand-title { font-size: 26px; font-weight: 800; margin: 0; color: #fff; }
-.brand-sub { font-size: 15px; margin: 2px 0 0; color: rgba(255,255,255,0.92); }
-.card-float {
-background: var(--surface);
-border-radius: var(--radius);
-box-shadow: 0 10px 30px rgba(46,42,39,0.08);
-border: 1px solid var(--border);
-padding: 22px;
+.btn-main {
+background: var(--terracota);
+color: #FFFFFF;
+box-shadow: 0 12px 24px -10px rgba(184, 68, 42, 0.6);
 }
-.search-card { margin-top: -64px; position: relative; z-index: 2; }
-.mascot-wrap { display: flex; align-items: center; gap: 18px; }
-.mascot-wrap svg { width: 110px; height: auto; flex-shrink: 0; }
-.search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-.search-row .input { flex: 1; min-width: 200px; border-radius: 14px; font-size: 16px; }
-.btn-accent {
-background: var(--accent); color: #fff; border: none; border-radius: 14px;
-padding: 0 22px; font-weight: 800; cursor: pointer; min-height: 44px;
-transition: transform .15s ease, background .2s ease;
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -10px rgba(184, 68, 42, 0.7); }
+.btn-outline {
+background: transparent;
+border-color: var(--carvao);
+color: var(--carvao);
 }
-.btn-accent:hover { background: var(--accent-text); transform: translateY(-1px); }
-.btn-accent:focus-visible, .btn-soft:focus-visible, .link-btn:focus-visible, .btn:focus-visible, input:focus-visible {
-outline: 3px solid var(--mustard); outline-offset: 2px;
+.btn-outline:hover { background: var(--carvao); color: var(--creme); }
+.hero-helper { font-size: 0.85rem; color: #6B5F57; margin-top: 14px; }
+
+/* Photo card */
+.photo-wrap {
+position: relative;
+justify-self: center;
+width: min(100%, 420px);
 }
-.btn-soft {
-background: #fff; color: var(--accent-text); border: 2px solid var(--accent);
-border-radius: 14px; padding: 10px 16px; font-weight: 700; cursor: pointer;
-transition: background .2s ease;
+.photo-card {
+transform: rotate(-2deg);
+background: #FFFFFF;
+border-radius: 28px;
+padding: 12px;
+box-shadow: var(--shadow-strong);
+transition: transform 0.4s ease;
 }
-.btn-soft:hover { background: #FFF1E6; }
-.btn-whats {
-background: #25D366; color: #0b3d21; border: none; border-radius: 14px;
-padding: 12px 18px; font-weight: 800; text-decoration: none; display: inline-flex;
-align-items: center; gap: 8px; cursor: pointer;
+.photo-card:hover { transform: rotate(0deg) scale(1.01); }
+.photo-card img {
+width: 100%;
+aspect-ratio: 4 / 5;
+object-fit: cover;
+border-radius: 20px;
+display: block;
 }
-.btn-whats:hover { background: #1fb75a; }
-.muted-sm { font-size: 13px; color: var(--text-muted); margin: 4px 0 0; }
-.helper { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
-.section-title { font-size: 19px; font-weight: 800; margin: 0; }
-.badge-pill {
-display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
-background: #FFF1E6; color: var(--accent-text); border: 1px solid #F5C9A9;
+.seal {
+position: absolute;
+width: 128px;
+height: 128px;
+bottom: -26px;
+left: -28px;
+background: var(--mostarda);
+border-radius: 50%;
+box-shadow: var(--shadow-soft);
+display: grid;
+place-items: center;
+animation: spin 22s linear infinite;
 }
-.badge-ok { background: #E6F6EC; color: #1E6B3B; border-color: #B5E3C6; }
-.badge-wait { background: #FFF6E0; color: #7A5200; border-color: #F5DCA0; }
-.badge-mustard { background: #FFF4D9; color: #7A5200; border-color: #F3D68B; }
-.timeline { list-style: none; padding: 0; margin: 14px 0 0; position: relative; }
-.timeline li { position: relative; padding: 0 0 22px 46px; }
-.timeline li:last-child { padding-bottom: 0; }
-.timeline li::before {
-content: ""; position: absolute; left: 13px; top: 28px; bottom: -2px; width: 3px; background: var(--border);
+.seal svg { width: 100%; height: 100%; }
+.seal-text { font-family: var(--font-display); font-weight: 800; font-size: 13px; fill: var(--carvao); letter-spacing: 2px; }
+.seal-center {
+position: absolute;
+inset: 0;
+display: grid;
+place-items: center;
+animation: spin-reverse 22s linear infinite;
 }
-.timeline li:last-child::before { display: none; }
-.timeline li.done::before { background: var(--accent); }
-.step-dot {
-position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%;
-background: #F4EDE3; border: 3px solid var(--border); display: flex; align-items: center; justify-content: center;
+.seal-center span {
+width: 44px; height: 44px; border-radius: 50%;
+background: var(--carvao);
+color: var(--mostarda);
+display: grid; place-items: center;
+font-weight: 800;
+font-family: var(--font-display);
 }
-.timeline li.done .step-dot { background: var(--accent); border-color: var(--accent); color: #fff; }
-.timeline li.current .step-dot { background: var(--mustard); border-color: var(--mustard); color: var(--charcoal); box-shadow: 0 0 0 5px rgba(232,163,61,0.25); }
-.step-title { font-weight: 800; margin: 0; font-size: 16px; }
-.step-meta { font-size: 13px; color: var(--text-muted); margin: 2px 0 0; }
-.step-note { font-size: 13px; color: var(--charcoal); background: #FFF8EC; border-radius: 10px; padding: 6px 10px; margin-top: 6px; display: inline-block; }
-.pending-text { color: #9A9088; }
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; margin-top: 12px; }
-.info-grid .lbl { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
-.info-grid .val { font-size: 15px; font-weight: 700; margin-top: 2px; }
-.hero-eta {
-background: linear-gradient(135deg, #FFF1E6 0%, #FFF8EC 100%);
-border: 1px solid #F5C9A9; border-radius: var(--radius); padding: 18px 22px;
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin-reverse { to { transform: rotate(-360deg); } }
+
+/* Tracking card */
+.track-section {
+position: relative;
+margin-top: -110px;
+padding-bottom: 40px;
+z-index: 2;
 }
-.hero-eta .big { font-size: 26px; font-weight: 800; color: var(--accent-text); margin: 4px 0 0; }
-.hero-eta .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; font-weight: 800; color: var(--text-muted); }
+.track-card {
+background: #FFFFFF;
+border-radius: 28px;
+padding: 32px;
+box-shadow: var(--shadow-strong);
+border: 1px solid rgba(34, 30, 27, 0.06);
+}
+.track-card h2 { font-size: 1.9rem; margin: 0 0 6px; font-weight: 800; }
+.muted { color: #6B5F57; }
+.search-row { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+@media (min-width: 640px) { .search-row { flex-direction: row; } }
+.field-label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+.input-big {
+flex: 1;
+font-family: var(--font-body);
+font-size: 1.05rem;
+padding: 16px 18px;
+border-radius: 16px;
+border: 2px solid rgba(34, 30, 27, 0.14);
+background: var(--creme);
+color: var(--carvao);
+width: 100%;
+box-sizing: border-box;
+}
+.input-big:focus { border-color: var(--terracota); outline: none; box-shadow: 0 0 0 4px rgba(184, 68, 42, 0.15); }
+.input-big::placeholder { color: #8A7E75; }
+.shortcut-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 0.9rem; }
+.shortcut {
+background: none; border: none; padding: 4px 8px; border-radius: 8px;
+color: var(--accent-text); font-weight: 700; cursor: pointer; font-family: var(--font-body);
+text-decoration: underline; text-underline-offset: 3px;
+}
+.shortcut:hover { background: var(--pessego); }
+
+.result { margin-top: 30px; }
+.result[hidden] { display: none; }
+.result-grid { display: grid; grid-template-columns: 1fr; gap: 26px; }
+@media (min-width: 800px) { .result-grid { grid-template-columns: 1.1fr 0.9fr; } }
+
+.timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+.step {
+position: relative;
+display: grid;
+grid-template-columns: 44px 1fr;
+gap: 14px;
+padding-bottom: 22px;
+}
+.step:last-child { padding-bottom: 0; }
+.step::before {
+content: "";
+position: absolute;
+left: 21px;
+top: 44px;
+bottom: 0;
+width: 3px;
+background: #E6DDD3;
+border-radius: 2px;
+}
+.step:last-child::before { display: none; }
+.step.done::before { background: var(--terracota); }
+.step-icon {
+width: 44px; height: 44px; border-radius: 50%;
+display: grid; place-items: center;
+background: #EFE8DF;
+color: #8A7E75;
+position: relative;
+z-index: 1;
+}
+.step.done .step-icon { background: var(--terracota); color: #FFFFFF; }
+.step.current .step-icon {
+background: var(--mostarda);
+color: var(--carvao);
+}
+.step.current .step-icon::after {
+content: "";
+position: absolute;
+inset: -8px;
+border-radius: 50%;
+border: 3px solid var(--mostarda);
+animation: pulse-ring 1.8s ease-out infinite;
+}
+@keyframes pulse-ring {
+0% { transform: scale(0.85); opacity: 0.9; }
+100% { transform: scale(1.35); opacity: 0; }
+}
+.step-title { font-weight: 700; font-family: var(--font-display); font-size: 1.1rem; margin: 0; }
+.step.pending .step-title { color: #8A7E75; }
+.step-meta { font-size: 0.85rem; color: #6B5F57; margin: 2px 0 0; }
+.step-note { font-size: 0.9rem; margin: 4px 0 0; color: #3A332E; }
+
+.details-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
+.detail-box {
+background: var(--creme);
+border-radius: 16px;
+padding: 14px 16px;
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.detail-box:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+.detail-box.full { grid-column: 1 / -1; }
+.detail-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6B5F57; font-weight: 600; }
+.detail-value { font-weight: 600; margin: 4px 0 0; color: var(--carvao); }
+.status-pill {
+display: inline-flex; align-items: center; gap: 6px;
+padding: 6px 12px; border-radius: 999px;
+background: var(--pessego); color: var(--accent-text); font-weight: 700; font-size: 0.85rem;
+}
+.code-pill {
+display: inline-block; padding: 4px 10px; border-radius: 999px;
+background: rgba(232, 163, 61, 0.22); color: #6B4310; font-weight: 700; font-size: 0.8rem;
+}
+.wa-cta {
+display: flex; justify-content: center; align-items: center; gap: 8px;
+width: 100%; margin-top: 16px; padding: 15px;
+border-radius: 16px; border: none; background: #1F8A4C; color: #FFFFFF;
+font-weight: 700; font-size: 1rem; cursor: pointer; text-decoration: none;
+transition: transform 0.2s ease, background 0.2s ease; box-sizing: border-box;
+font-family: var(--font-body);
+}
+.wa-cta:hover { background: #17703D; transform: translateY(-1px); }
+.wa-cta:focus-visible { outline: 3px solid var(--mostarda); outline-offset: 3px; }
 .not-found {
-background: #FFF8EC; border: 1px dashed #E8C49A; border-radius: var(--radius); padding: 18px; color: var(--charcoal);
+margin-top: 24px;
+background: var(--pessego);
+border-radius: 18px;
+padding: 18px 20px;
+color: #4A2E22;
 }
-.grid-2 { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 22px; }
-@media (min-width: 860px) { .grid-2 { grid-template-columns: 1.1fr 0.9fr; } }
-.kpi-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-@media (min-width: 720px) { .kpi-row { grid-template-columns: repeat(4, 1fr); } }
-.kpi-box { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 14px; box-shadow: 0 6px 18px rgba(46,42,39,0.05); }
-.kpi-box .n { font-size: 26px; font-weight: 800; color: var(--accent-text); }
-.kpi-box .l { font-size: 12px; color: var(--text-muted); font-weight: 700; }
-.kpi-box .c { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-.preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.chip {
-background: #fff; border: 1px solid #F0D8BF; color: var(--charcoal); border-radius: 999px;
-padding: 6px 12px; font-size: 13px; font-weight: 700; cursor: pointer;
+.not-found[hidden] { display: none; }
+.not-found strong { font-family: var(--font-display); font-size: 1.05rem; }
+
+/* Sections */
+section.block { padding: 84px 0; }
+.section-eyebrow {
+display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--accent-text);
+text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px;
 }
-.chip:hover { border-color: var(--accent); }
-.delivery-list { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
-.delivery-item { border: 1px solid var(--border); border-radius: 16px; padding: 16px; background: #FFFDF9; }
-.delivery-head { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
-.delivery-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 800; color: var(--accent-text); font-size: 15px; }
-.step-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.step-buttons .btn-soft { padding: 8px 12px; font-size: 13px; }
-.step-buttons .btn-soft:disabled { opacity: .5; cursor: not-allowed; }
-.field-label { font-weight: 700; font-size: 14px; display: block; margin-bottom: 4px; }
-.input-mini {
-width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid #E4D3BE; font-family: inherit; font-size: 15px; background: #fff; color: var(--charcoal);
+.section-title { font-size: clamp(2rem, 4.5vw, 2.9rem); font-weight: 800; margin: 0 0 16px; line-height: 1.08; }
+.about-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
+@media (min-width: 860px) { .about-grid { grid-template-columns: 0.8fr 1.2fr; } }
+.about-photo {
+width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
+border: 4px solid #FFFFFF; box-shadow: var(--shadow-strong); justify-self: center;
 }
-.form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-@media (min-width: 640px) { .form-grid { grid-template-columns: 1fr 1fr; } }
-.form-grid .full { grid-column: 1 / -1; }
-.hidden { display: none !important; }
-.foot-bruno { background: none; border: none; color: var(--accent-text); font-weight: 700; text-decoration: underline; cursor: pointer; font-size: 14px; font-family: inherit; }
-.foot-bruno:focus-visible { outline: 3px solid var(--mustard); }
-.page-footer { background: var(--charcoal); color: #F7EFE4; padding: 26px 0; margin-top: 36px; border-radius: 28px 28px 0 0; }
-.page-footer p { margin: 0; font-size: 14px; line-height: 1.6; }
-.page-footer .foot-line { color: #E9DCC9; }
-.gate-card { max-width: 440px; margin: 20px auto 0; }
-.gate-error { color: #8A2B12; font-weight: 700; font-size: 14px; margin-top: 8px; }
-.stack-gap { display: flex; flex-direction: column; gap: 14px; }
-.row-wrap { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.space-between { justify-content: space-between; }
-.tiny-link { font-size: 13px; color: var(--accent-text); font-weight: 700; background: none; border: none; cursor: pointer; font-family: inherit; text-decoration: underline; }
-.empty-msg { color: var(--text-muted); font-size: 14px; padding: 12px 0; }
-.mt-16 { margin-top: 16px; }
-.mt-28 { margin-top: 28px; }
-@media print { .brand-header, .page-footer, .no-print { display: none !important; } }
+.about-photo-wrap { display: flex; justify-content: center; }
+.about-text { font-size: 1.08rem; color: #3A332E; }
+.features { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 28px; }
+@media (min-width: 640px) { .features { grid-template-columns: repeat(3, 1fr); } }
+.feature {
+background: #FFFFFF;
+border-radius: 22px;
+padding: 22px;
+box-shadow: var(--shadow-soft);
+border: 1px solid rgba(34, 30, 27, 0.05);
+transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.feature:hover { transform: translateY(-4px); box-shadow: var(--shadow-strong); }
+.feature-icon {
+width: 48px; height: 48px; border-radius: 14px;
+display: grid; place-items: center;
+background: linear-gradient(135deg, var(--pessego), #FBE3CC);
+color: var(--accent-text);
+margin-bottom: 14px;
+}
+.feature h3 { font-size: 1.1rem; margin: 0 0 6px; font-weight: 700; }
+.feature p { margin: 0; font-size: 0.92rem; color: #6B5F57; }
+
+/* Contact band */
+.contact-band {
+background: var(--carvao);
+color: var(--creme);
+border-radius: 32px;
+padding: 56px 32px;
+margin: 0 auto;
+position: relative;
+overflow: hidden;
+}
+.contact-band::before {
+content: "";
+position: absolute;
+width: 320px; height: 320px; border-radius: 50%;
+background: radial-gradient(circle, rgba(224, 122, 63, 0.35), transparent 70%);
+top: -120px; right: -80px;
+}
+.contact-inner { position: relative; display: grid; grid-template-columns: 1fr; gap: 24px; align-items: center; }
+@media (min-width: 800px) { .contact-inner { grid-template-columns: 1.2fr 0.8fr; } }
+.contact-band h2 { font-size: clamp(2rem, 4.5vw, 2.9rem); margin: 0 0 10px; font-weight: 800; }
+.contact-band p { color: #E9DFD3; margin: 0; }
+.phone-big { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--mostarda); margin: 0; }
+.phone-caption { font-size: 0.85rem; color: #CFC4B7; margin-top: 4px; }
+.btn-mustard {
+display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+background: var(--mostarda); color: var(--carvao);
+padding: 16px 26px; border-radius: 16px; font-weight: 700; text-decoration: none;
+transition: transform 0.2s ease, box-shadow 0.2s ease; font-size: 1rem;
+}
+.btn-mustard:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -10px rgba(232, 163, 61, 0.6); }
+.contact-actions { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+@media (min-width: 800px) { .contact-actions { align-items: flex-end; } }
+
+/* Footer */
+footer.site-footer {
+background: #F4EADD;
+padding: 48px 0 32px;
+border-top: 1px solid rgba(34, 30, 27, 0.06);
+}
+.footer-grid { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; }
+@media (min-width: 760px) { .footer-grid { grid-template-columns: 1.3fr 1fr 1fr; } }
+.footer-brand { display: flex; align-items: center; gap: 12px; }
+.footer-brand .logo-circle { width: 52px; height: 52px; }
+.footer-links a { color: var(--carvao); text-decoration: none; display: block; margin-bottom: 8px; font-weight: 500; }
+.footer-links a:hover { color: var(--accent-text); text-decoration: underline; }
+.footer-bottom {
+margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(34, 30, 27, 0.1);
+display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
+font-size: 0.85rem; color: #6B5F57;
+}
+.admin-link {
+background: none; border: none; color: #6B5F57; text-decoration: underline;
+cursor: pointer; font-size: 0.85rem; padding: 2px; font-family: var(--font-body);
+}
+.admin-link:hover { color: var(--accent-text); }
+
+/* Fade-in on scroll */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* Modal (dialog) */
+dialog.dialog { max-width: 720px; width: calc(100% - 32px); }
+.admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .admin-grid { grid-template-columns: 1fr 1fr; } }
+.admin-grid .full { grid-column: 1 / -1; }
+.mini-label { font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; display: block; }
+.helper { font-size: 0.8rem; color: #6B5F57; margin: 4px 0 0; }
+.delivery-item {
+border: 1px solid rgba(34, 30, 27, 0.1);
+border-radius: 16px;
+padding: 14px;
+margin-bottom: 12px;
+background: #FFFFFF;
+}
+.delivery-item header-row { display: flex; }
+.delivery-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; }
+.action-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.btn-small {
+padding: 8px 12px; border-radius: 12px; border: 1.5px solid var(--terracota);
+background: #FFFFFF; color: var(--accent-text); font-weight: 600; font-size: 0.85rem;
+cursor: pointer; font-family: var(--font-body);
+}
+.btn-small:hover { background: var(--pessego); }
+.btn-small.primary { background: var(--terracota); color: #FFFFFF; }
+.btn-small.primary:hover { background: #9A3520; }
+.stats-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.toast-hint { font-size: 0.8rem; color: #6B5F57; }
+
+@media print {
+.top-bar, .hero, .track-section, section.block, footer.site-footer, .contact-band { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+*, *::before, *::after { animation: none !important; transition: none !important; }
+.reveal { opacity: 1; transform: none; }
+}
 </style>
 </head>
 <body>
 
-<header class="brand-header">
-<div class="shell-container">
-<div class="brand-row">
-<div>
-<span class="eyebrow-pill">Transporte com confiança</span>
-<h1 class="brand-title">Bruninho Lima Express</h1>
-<p class="brand-sub">Entregas com Confiança</p>
-</div>
-<div class="row-wrap no-print">
-<button class="btn-soft" id="btnPrintTrack" type="button" onclick="window.print()" style="background:#fff;">Imprimir rastreio</button>
-<button class="btn-soft" id="btnShareSite" type="button" style="background:#fff;">Compartilhar</button>
-</div>
-</div>
+<header class="top-bar">
+<div class="shell-container row between items-center" style="padding: 14px 20px;">
+<a href="#inicio" class="brand" aria-label="Bruninho Lima Express — início">
+<img class="logo-circle" src="https://generated-images.adapta.one/eder.matavelli%40gmail.com/01a20e87-e269-75ad-9e6b-fb5124e0db25/2026-11-24T17-20-21-651Z_Original_user_intent_Tool_generated_image_directi.png" alt="Logo Bruninho Lima Express: mascote na moto em selo circular">
+<span class="brand-name" style="font-weight: 700; font-size: 1.1rem;">Bruninho Lima Express</span>
+</a>
+<a class="wa-link" href="https://wa.me/5519978049090" target="_blank" rel="noopener">WhatsApp do Bruno</a>
 </div>
 </header>
 
-<main class="shell-container" style="padding: 0 16px;">
+<main id="inicio">
 
-<section id="clientArea" aria-labelledby="clientTitle">
-<div class="card-float search-card">
-<div class="mascot-wrap">
-<svg viewBox="0 0 200 170" role="img" aria-label="Bruno, entregador sorridente de jaqueta terracota em uma moto prata">
-<ellipse cx="100" cy="158" rx="78" ry="7" fill="#EFE2D0"/>
-<circle cx="52" cy="128" r="26" fill="#2E2A27"/>
-<circle cx="52" cy="128" r="12" fill="#9AA0A6"/>
-<circle cx="150" cy="128" r="26" fill="#2E2A27"/>
-<circle cx="150" cy="128" r="12" fill="#9AA0A6"/>
-<path d="M52 128 L92 110 L125 110 L150 128" stroke="#A7ADB3" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M92 110 L100 88 L122 88" stroke="#A7ADB3" stroke-width="6" fill="none" stroke-linecap="round"/>
-<rect x="60" y="98" width="46" height="13" rx="6" fill="#C7CDD3"/>
-<path d="M108 58 Q120 52 128 64 L132 92 Q120 100 102 96 Z" fill="#C1502E"/>
-<path d="M84 62 Q96 50 116 56 L118 92 Q98 98 82 90 Z" fill="#C1502E"/>
-<rect x="92" y="90" width="22" height="18" rx="4" fill="#E07A3F"/>
-<path d="M82 66 L70 96" stroke="#C1502E" stroke-width="12" stroke-linecap="round"/>
-<path d="M118 66 L134 94" stroke="#C1502E" stroke-width="12" stroke-linecap="round"/>
-<circle cx="100" cy="40" r="20" fill="#F2C29B"/>
-<path d="M80 36 Q84 18 100 18 Q118 18 120 36 Q112 26 100 28 Q88 26 80 36 Z" fill="#8C8A87"/>
-<path d="M82 46 Q88 64 100 60 Q112 64 118 46 Q112 56 100 54 Q88 56 82 46 Z" fill="#9B9A97"/>
-<circle cx="93" cy="41" r="2.4" fill="#2E2A27"/>
-<circle cx="107" cy="41" r="2.4" fill="#2E2A27"/>
-<path d="M94 52 Q100 57 106 52" stroke="#2E2A27" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-<rect x="72" y="20" width="56" height="8" rx="4" fill="#E8A33D"/>
-</svg>
-<div style="flex:1;">
-<h2 id="clientTitle" class="section-title" style="font-size:22px;">Onde está a sua encomenda?</h2>
-<p class="muted-sm">Digite o código de rastreio enviado pelo Bruno no WhatsApp.</p>
-<form id="trackForm" class="search-row" autocomplete="off" novalidate>
-<label for="trackInput" class="sr-only" style="position:absolute;left:-9999px;">Código de rastreio</label>
-<input class="input-mini" id="trackInput" type="text" placeholder="Digite o código de rastreio (ex.: BL-1042)" maxlength="12" aria-describedby="trackHelp">
-<button class="btn-accent" type="submit">Rastrear</button>
-</form>
-<p id="trackHelp" class="helper">Formato do código: BL seguido de 4 caracteres. Use as letras e números exatamente como recebeu.</p>
-<div class="preset-row" aria-label="Códigos de exemplo">
-<span class="helper" style="margin-top:4px;">Exemplos:</span>
-<button class="chip" type="button" data-sample="BL-1042">BL-1042</button>
-<button class="chip" type="button" data-sample="BL-1043">BL-1043</button>
-<button class="chip" type="button" data-sample="BL-1044">BL-1044</button>
-</div>
-</div>
-</div>
-</div>
-
-<div id="trackResult" class="mt-28" aria-live="polite"></div>
-
-<div class="mt-28" style="max-width:720px;margin-left:auto;margin-right:auto;">
-<div class="card-float" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;">
+<!-- HERO -->
+<section class="hero">
+<div class="blob blob-terracota" aria-hidden="true"></div>
+<div class="blob blob-mostarda" aria-hidden="true"></div>
+<div class="shell-container" style="padding: 0 20px; position: relative;">
+<div class="hero-grid">
 <div>
-<h3 class="section-title">Precisa de ajuda com a entrega?</h3>
-<p class="muted-sm">Fale direto com o Bruno, de segunda a sábado, em horário comercial.</p>
+<span class="pill"><span class="pill-dot"></span>Indaiatuba e região · até 300 km</span>
+<h1>Seu documento chega. E você sabe <span class="highlight">por quem.</span></h1>
+<p class="hero-sub">Transporte de pequenos volumes com confiabilidade. Quem pega a sua encomenda é o Bruno — e quem entrega também.</p>
+<div class="hero-actions">
+<a href="#rastreio" class="btn-main">Rastrear entrega</a>
+<a href="https://wa.me/5519978049090" target="_blank" rel="noopener" class="btn-outline">Falar no WhatsApp</a>
 </div>
-<a class="btn-whats" href="https://wa.me/5519978049090" target="_blank" rel="noopener">Falar com o Bruno no WhatsApp</a>
+<p class="hero-helper">Coletas do dia até 15h · Resposta média em 10 minutos no WhatsApp</p>
+</div>
+<div class="photo-wrap">
+<div class="photo-card">
+<img src="https://generated-images.adapta.one/eder.matavelli%40gmail.com/01a20e87-e269-75ad-9e6b-fb5124e0db25/2026-11-24T18-50-06-139Z_Original_user_intent_Tool_generated_image_directi.png" alt="Bruno Lima, entregador da Bruninho Lima Express, com uniforme terracota e logo bordado, sorrindo e fazendo joinha">
+</div>
+<div class="seal" aria-hidden="true">
+<svg viewBox="0 0 128 128">
+<defs>
+<path id="circlePath" d="M64,64 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"></path>
+</defs>
+<text class="seal-text"><textPath href="#circlePath">ENTREGAS COM CONFIANÇA • ENTREGAS COM CONFIANÇA •</textPath></text>
+</svg>
+<div class="seal-center"><span>BL</span></div>
 </div>
 </div>
-
-<div class="kpi-row mt-28" style="max-width:900px;margin-left:auto;margin-right:auto;" id="publicKpis" aria-label="Indicadores de atendimento"></div>
+</div>
+</div>
 </section>
 
-<section id="adminArea" class="hidden" aria-labelledby="adminTitle">
-<div class="mt-28"></div>
-<div class="card-float" id="gateCard">
-<h2 id="adminTitle" class="section-title">Área do Bruno</h2>
-<p class="muted-sm">Acesso restrito ao entregador. Digite a senha para cadastrar e atualizar entregas.</p>
-<form id="gateForm" class="stack-gap mt-16" novalidate>
-<div>
-<label class="field-label" for="gatePass">Senha de acesso</label>
-<input class="input-mini" id="gatePass" type="password" placeholder="Digite a senha" autocomplete="current-password" aria-describedby="gateHelp">
-<p id="gateHelp" class="helper">Senha informada pelo Bruno. Você pode sair a qualquer momento.</p>
-<p id="gateError" class="gate-error hidden" role="alert">Senha incorreta. Tente novamente.</p>
+<!-- TRACKING CARD -->
+<section class="track-section" id="rastreio">
+<div class="shell-container" style="padding: 0 20px;">
+<div class="track-card reveal">
+<span class="section-eyebrow">Rastreio em tempo real</span>
+<h2>Acompanhe sua entrega</h2>
+<p class="muted" style="margin: 0;">Use o código enviado pelo Bruno no WhatsApp para ver cada etapa da sua encomenda.</p>
+
+<form id="trackForm" class="search-row" novalidate>
+<div style="flex: 1;">
+<label class="field-label" for="trackCode">Código de rastreio</label>
+<input class="input-big" id="trackCode" type="text" placeholder="Digite o código de rastreio" autocomplete="off" aria-describedby="trackHelp">
 </div>
-<div class="row-wrap">
-<button class="btn-accent" type="submit">Entrar</button>
-<button class="btn-soft" type="button" id="btnBackClient">Voltar ao rastreio</button>
+<div style="display: flex; align-items: flex-end;">
+<button type="submit" class="btn-main" style="width: 100%;">Rastrear</button>
 </div>
 </form>
+<p id="trackHelp" class="helper" style="margin-top: 10px;">O código tem o formato BL-XXXX e aparece no comprovante de coleta.</p>
+<div class="shortcut-row">
+<span class="muted">Teste com:</span>
+<button type="button" class="shortcut" id="shortcutBtn">BL-1043</button>
 </div>
 
-<div id="panelArea" class="hidden">
-<div class="row-wrap space-between mt-16">
+<div class="not-found" id="notFound" role="status" hidden>
+<strong>Código não encontrado.</strong>
+<p style="margin: 6px 0 0;">Confira o código enviado pelo Bruno no WhatsApp.</p>
+</div>
+
+<div class="result" id="resultBox" hidden aria-live="polite">
+<div class="result-grid">
 <div>
-<h2 class="section-title" style="font-size:22px;">Painel do entregador</h2>
-<p class="muted-sm">Crie entregas, avance as etapas e copie o link de rastreio para o cliente.</p>
+<div class="row between items-center" style="margin-bottom: 14px;">
+<h3 style="margin: 0; font-size: 1.2rem; font-weight: 800;">Linha do tempo</h3>
+<span class="status-pill" id="resStatus">Em rota</span>
 </div>
-<div class="row-wrap">
-<span class="badge-pill" id="activeCountBadge">0 em andamento</span>
-<button class="btn-soft" type="button" id="btnLogout">Sair</button>
-</div>
-</div>
-
-<div class="kpi-row mt-16" id="adminKpis"></div>
-
-<div class="grid-2">
-<div class="card-float">
-<h3 class="section-title">Nova entrega</h3>
-<p class="muted-sm">O código BL-XXXX é gerado automaticamente e a etapa "Coletado" recebe a data e hora atual.</p>
-<form id="newForm" class="form-grid mt-16" novalidate>
-<div>
-<label class="field-label" for="fName">Nome do destinatário</label>
-<input class="input-mini" id="fName" type="text" placeholder="Ex.: Padaria Pão Quente" autocomplete="off">
+<ol class="timeline" id="timeline"></ol>
 </div>
 <div>
-<label class="field-label" for="fCity">Cidade</label>
-<input class="input-mini" id="fCity" type="text" placeholder="Ex.: Indaiatuba" value="Indaiatuba">
-</div>
-<div class="full">
-<label class="field-label" for="fAddr">Endereço ou bairro</label>
-<input class="input-mini" id="fAddr" type="text" placeholder="Ex.: Rua das Flores, 120 — Centro">
-<p class="helper">Informe rua e número, ou só o bairro para entregas em bairros.</p>
-</div>
-<div class="full">
-<label class="field-label" for="fVolume">Descrição do volume</label>
-<input class="input-mini" id="fVolume" type="text" placeholder="Ex.: Caixa pequena, 1 kg">
-</div>
-<div class="full">
-<label class="field-label" for="fEta">Previsão de entrega</label>
-<input class="input-mini" id="fEta" type="text" placeholder="Ex.: Hoje até 17h">
-<div class="preset-row">
-<button type="button" class="chip" data-eta="Hoje até 17h">Hoje até 17h</button>
-<button type="button" class="chip" data-eta="Amanhã até 12h">Amanhã até 12h</button>
-<button type="button" class="chip" data-eta="Em 2 dias úteis">Em 2 dias úteis</button>
+<h3 style="margin: 0 0 4px; font-size: 1.2rem; font-weight: 800;">Detalhes da entrega</h3>
+<p class="muted text-sm" style="margin: 0 0 14px;">Informações cadastradas na coleta.</p>
+<div class="details-grid" id="detailsGrid"></div>
+<button type="button" class="wa-cta" id="waBtn">Falar com o Bruno no WhatsApp</button>
+<p class="helper" style="text-align: center;">Resposta média em 10 minutos.</p>
 </div>
 </div>
-<div class="full row-wrap">
-<button class="btn-accent" type="submit">Salvar entrega</button>
-<button class="btn-soft" type="button" id="btnResetForm">Limpar campos</button>
 </div>
-</form>
 </div>
+</div>
+</section>
 
-<div class="card-float">
-<h3 class="section-title">Entregas cadastradas</h3>
-<p class="muted-sm">Avance a etapa conforme a entrega acontece. Cada clique grava data e hora.</p>
-<div class="row-wrap mt-16">
-<input class="input-mini" id="searchAdmin" type="search" placeholder="Buscar por código, nome ou bairro" style="max-width:320px;">
+<!-- ABOUT -->
+<section class="block" id="sobre">
+<div class="shell-container" style="padding: 0 20px;">
+<div class="about-grid">
+<div class="about-photo-wrap reveal">
+<img class="about-photo" src="https://generated-images.adapta.one/eder.matavelli%40gmail.com/01a20e87-e269-75ad-9e6b-fb5124e0db25/2026-11-24T18-50-06-139Z_Original_user_intent_Tool_generated_image_directi.png" alt="Bruno Lima, entregador da Bruninho Lima Express">
 </div>
-<div class="delivery-list" id="deliveryList"></div>
+<div class="reveal">
+<span class="section-eyebrow">Quem entrega</span>
+<h2 class="section-title">Não é uma empresa rotativa. É uma pessoa.</h2>
+<p class="about-text">Muita gente já contratou um motoboy e ficou sem saber quem estava levando o seu documento. Amanhã é outra pessoa, e a responsabilidade continua sendo sua. Aqui funciona diferente: você sabe o nome, o rosto e o telefone de quem cuida do que é seu.</p>
+<div class="features">
+<div class="feature">
+<div class="feature-icon" aria-hidden="true">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.1 7 22l5-3 5 3-1.2-8.9"/></svg>
+</div>
+<h3>18+ anos de experiência comercial</h3>
+<p>Conhece as ruas, os horários e os clientes da região.</p>
+</div>
+<div class="feature">
+<div class="feature-icon" aria-hidden="true">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</div>
+<h3>Atendimento direto com o Bruno</h3>
+<p>Sem central. Você fala com quem está na rua.</p>
+</div>
+<div class="feature">
+<div class="feature-icon" aria-hidden="true">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4.5 8-11.8A8 8 0 0 0 4 10.2C4 17.5 12 22 12 22z"/><circle cx="12" cy="10" r="3"/></svg>
+</div>
+<h3>Rastreio até a entrega final</h3>
+<p>Cada etapa registrada, da coleta à assinatura.</p>
 </div>
 </div>
+</div>
+</div>
+</div>
+</section>
 
-<div class="card-float mt-28">
-<div class="row-wrap space-between">
+<!-- CONTACT BAND -->
+<section class="block" style="padding-top: 0;">
+<div class="shell-container" style="padding: 0 20px;">
+<div class="contact-band reveal">
+<div class="contact-inner">
 <div>
-<h3 class="section-title">Resumo do dia</h3>
-<p class="muted-sm">Atualizado conforme as etapas são marcadas.</p>
+<h2>Precisa de uma entrega hoje?</h2>
+<p>Peça pelo WhatsApp e receba a confirmação de coleta em minutos.</p>
+<p class="phone-big" style="margin-top: 18px;">(19) 97804-9090</p>
+<p class="phone-caption">Atendimento de segunda a sábado, das 8h às 19h.</p>
 </div>
-<div class="row-wrap">
-<button class="btn-soft" type="button" id="btnCopyLast">Copiar último link</button>
-<button class="btn-soft" type="button" id="btnExportTxt">Exportar lista (.txt)</button>
-<button class="btn-soft" type="button" id="btnClearDemo">Restaurar demonstração</button>
+<div class="contact-actions">
+<a class="btn-mustard" href="https://wa.me/5519978049090" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+<span style="font-size: 0.85rem; color: #CFC4B7;">Sem taxa de agendamento</span>
 </div>
 </div>
-<div id="dailySummary" class="stack-gap mt-16"></div>
 </div>
 </div>
 </section>
 
 </main>
 
-<dialog class="dialog" id="copyDialog">
+<footer class="site-footer">
+<div class="shell-container" style="padding: 0 20px;">
+<div class="footer-grid">
+<div>
+<div class="footer-brand">
+<img class="logo-circle" src="https://generated-images.adapta.one/eder.matavelli%40gmail.com/01a20e87-e269-75ad-9e6b-fb5124e0db25/2026-11-24T17-20-21-651Z_Original_user_intent_Tool_generated_image_directi.png" alt="Logo Bruninho Lima Express">
+<div>
+<div class="brand-name" style="font-weight: 800; font-size: 1.15rem;">Bruninho Lima Express</div>
+<div class="muted" style="font-size: 0.9rem;">Seu documento, na mão de quem você conhece.</div>
+</div>
+</div>
+<p class="muted" style="font-size: 0.9rem; margin-top: 14px;">Indaiatuba e região — até 300 km</p>
+</div>
+<div class="footer-links">
+<a href="https://wa.me/5519978049090" target="_blank" rel="noopener">WhatsApp: (19) 97804-9090</a>
+<a href="mailto:brunotdelima@gmail.com">brunotdelima@gmail.com</a>
+</div>
+<div class="footer-links">
+<a href="#rastreio">Rastrear entrega</a>
+<a href="#sobre">Quem entrega</a>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2026 Bruninho Lima Express. Todos os direitos reservados.</span>
+<button type="button" class="admin-link" id="openAdmin">Área do Bruno</button>
+</div>
+</div>
+</footer>
+
+<!-- ADMIN DIALOG -->
+<dialog class="dialog" id="adminDialog" aria-labelledby="adminTitle">
 <div>
 <header>
-<h2>Link de rastreio pronto</h2>
-<p>Cole no WhatsApp do cliente para ele acompanhar a entrega.</p>
+<h2 id="adminTitle" class="brand-name" style="margin: 0;">Área do Bruno</h2>
+<p class="muted text-sm" style="margin: 4px 0 0;">Acesso restrito para registrar e atualizar entregas.</p>
 </header>
-<section>
-<textarea class="input-mini" id="copyText" rows="4" readonly style="width:100%;"></textarea>
+
+<section id="loginSection" class="stack gap-3 mt-3">
+<div>
+<label class="mini-label" for="adminPass">Senha de acesso</label>
+<input class="input" id="adminPass" type="password" placeholder="Digite a senha" autocomplete="current-password">
+<p class="helper">Use a senha definida pelo Bruno.</p>
+</div>
+<p class="helper" id="loginError" style="color: #9A3520;" hidden>Senha incorreta. Tente novamente.</p>
+<div class="row gap-2">
+<button type="button" class="btn-main" id="loginBtn">Entrar</button>
+<button type="button" class="btn-outline" data-dialog-close>Cancelar</button>
+</div>
 </section>
-<footer class="row-wrap" style="justify-content:flex-end;margin-top:14px;">
-<button class="btn-soft" type="button" data-dialog-close>Fechar</button>
-<button class="btn-accent" type="button" id="btnCopyDialogOk">Copiar texto</button>
+
+<section id="panelSection" hidden class="mt-3">
+<div class="stats-bar">
+<span class="status-pill" id="cntColetado">0 coletadas</span>
+<span class="status-pill" id="cntRota">0 em rota</span>
+<span class="status-pill" id="cntEntregue">0 entregues</span>
+</div>
+
+<h3 style="font-size: 1.1rem; margin: 0 0 4px;">Nova entrega</h3>
+<p class="helper" style="margin-bottom: 10px;">Preencha os dados. O código BL-XXXX é gerado automaticamente.</p>
+<form id="newDeliveryForm" class="admin-grid" novalidate>
+<div>
+<label class="mini-label" for="fDest">Destinatário</label>
+<input class="input" id="fDest" type="text" placeholder="Ex.: Clínica Saúde Viva" required>
+</div>
+<div>
+<label class="mini-label" for="fBairro">Endereço / bairro</label>
+<input class="input" id="fBairro" type="text" placeholder="Ex.: Jardim Europa, Rua das Flores 120" required>
+</div>
+<div>
+<label class="mini-label" for="fCidade">Cidade</label>
+<select class="input" id="fCidade">
+<option>Indaiatuba</option>
+<option>Salto</option>
+<option>Itu</option>
+<option>Campinas</option>
+<option>Sorocaba</option>
+<option>Valinhos</option>
+</select>
+</div>
+<div>
+<label class="mini-label" for="fVolume">Volume</label>
+<input class="input" id="fVolume" type="text" placeholder="Ex.: Malote de documentos" required>
+</div>
+<div class="full">
+<label class="mini-label" for="fPrev">Previsão de entrega</label>
+<input class="input" id="fPrev" type="date">
+<p class="helper">Deixe em branco se ainda não houver previsão.</p>
+</div>
+<div class="full row gap-2">
+<button type="submit" class="btn-main">Registrar coleta</button>
+</div>
+</form>
+
+<h3 style="font-size: 1.1rem; margin: 22px 0 4px;">Entregas registradas</h3>
+<p class="helper" style="margin-bottom: 12px;">Atualize a etapa e, se quiser, adicione uma observação.</p>
+<div id="deliveryList"></div>
+
+<div class="row gap-2 mt-3" style="flex-wrap: wrap;">
+<button type="button" class="btn-small" id="copyLinkBtn">Copiar link de rastreio</button>
+<button type="button" class="btn-small" id="logoutBtn">Sair</button>
+</div>
+</section>
+
+<footer class="row justify-end gap-2 mt-4">
+<button type="button" class="btn-outline" data-dialog-close>Fechar</button>
 </footer>
 </div>
 </dialog>
 
-<footer class="page-footer">
-<div class="shell-container">
-<p><strong>Bruninho Lima Express — Transporte de pequenos volumes com confiabilidade.</strong></p>
-<p class="foot-line">Indaiatuba e região, até 300 km. WhatsApp (19) 97804-9090.</p>
-<p class="mt-16" style="margin-top:12px;">
-<button class="foot-bruno" type="button" id="btnOpenAdmin">Área do Bruno</button>
-</p>
-</div>
-</footer>
-
 <script>
 (function () {
-var STORE_KEY = 'bruninho_entregas_v1';
-var SESSION_KEY = 'bruninho_sessao_v1';
-var PASSWORD = 'bruno2026';
-var STAGES = [
-{ id: 'coletado', label: 'Coletado' },
-{ id: 'rota', label: 'Em rota' },
-{ id: 'saiu', label: 'Saiu para entrega' },
-{ id: 'entregue', label: 'Entregue' }
-];
-var ADMIN_BUTTONS = [
-{ idx: 1, label: 'Marcar em rota' },
-{ idx: 2, label: 'Marcar saiu para entrega' },
-{ idx: 3, label: 'Marcar entregue' }
-];
+var STEPS = ["Coletado", "Em rota", "Saiu para entrega", "Entregue"];
+var ADMIN_PASS = "bruno2026";
 
-function pad2(n) { return n < 10 ? '0' + n : '' + n; }
-function nowStamp() {
-var d = new Date();
-return pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+var deliveriesStore = window.skipStore("bruninho-entregas-v1", [
+{
+code: "BL-1042", destinatario: "Farmácia São João", endereco: "Centro, Indaiatuba", cidade: "Indaiatuba",
+volume: "Documentos e exames", previsao: "2026-11-23", stage: 3,
+history: [
+{ label: "Coletado", date: "23/11/2026", time: "09:12", note: "Coletado na farmácia, envelope lacrado." },
+{ label: "Em rota", date: "23/11/2026", time: "09:40", note: "Saindo do centro para a entrega." },
+{ label: "Saiu para entrega", date: "23/11/2026", time: "09:55", note: "Entrega em andamento." },
+{ label: "Entregue", date: "23/11/2026", time: "10:05", note: "Recebido por Carla, recepção." }
+]
+},
+{
+code: "BL-1043", destinatario: "Escritório Contábil Almeida", endereco: "Cidade Nova, Indaiatuba", cidade: "Indaiatuba",
+volume: "Malote de documentos", previsao: "2026-11-24", stage: 1,
+history: [
+{ label: "Coletado", date: "24/11/2026", time: "08:30", note: "Malote coletado no escritório." },
+{ label: "Em rota", date: "24/11/2026", time: "09:15", note: "Trajeto pela Av. Presidente Vargas." }
+]
+},
+{
+code: "BL-1044", destinatario: "Distribuidora Vale Verde", endereco: "Jardim Morada do Sol, Indaiatuba", cidade: "Indaiatuba",
+volume: "Pequeno volume, 2 kg", previsao: "2026-11-24", stage: 0,
+history: [
+{ label: "Coletado", date: "24/11/2026", time: "11:40", note: "Volume conferido e etiquetado." }
+]
 }
+]);
+
 function el(tag, cls, text) {
 var n = document.createElement(tag);
 if (cls) n.className = cls;
 if (text !== undefined && text !== null) n.textContent = text;
 return n;
 }
-function normCode(s) { return (s || '').trim().toUpperCase(); }
-function genCode(existing) {
-var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-var code, tries = 0;
-do {
-var s = '';
-for (var i = 0; i < 4; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
-code = 'BL-' + s;
-tries++;
-} while (existing.some(function (e) { return e.codigo === code; }) && tries < 200);
-return code;
+
+function fmtDate(iso) {
+if (!iso) return "A confirmar";
+var p = iso.split("-");
+return p[2] + "/" + p[1] + "/" + p[0];
 }
 
-var defaultData = [
-{
-codigo: 'BL-1042', destinatario: 'Farmácia São João', endereco: 'Centro', cidade: 'Indaiatuba',
-volume: 'Documentos e exames', previsao: 'Entregue hoje até 11h', etapa: 3, observacao: '',
-historico: [
-{ etapa: 0, quando: '14/05 08:15', obs: '' },
-{ etapa: 1, quando: '14/05 08:52', obs: '' },
-{ etapa: 2, quando: '14/05 09:40', obs: 'Trânsito leve na Av. Presidente Vargas' },
-{ etapa: 3, quando: '14/05 10:18', obs: 'Recebido pela recepcionista' }
-]
-},
-{
-codigo: 'BL-1043', destinatario: 'Escritório Contábil Almeida', endereco: 'Cidade Nova', cidade: 'Indaiatuba',
-volume: 'Malote de documentos', previsao: 'Hoje até 17h', etapa: 1, observacao: '',
-historico: [
-{ etapa: 0, quando: '15/05 13:05', obs: '' },
-{ etapa: 1, quando: '15/05 13:40', obs: 'Saiu da coleta, a caminho do bairro' }
-]
-},
-{
-codigo: 'BL-1044', destinatario: 'Distribuidora Vale Verde', endereco: 'Jardim Morada do Sol', cidade: 'Indaiatuba',
-volume: 'Pequeno volume, 2 kg', previsao: 'Amanhã até 12h', etapa: 0, observacao: '',
-historico: [
-{ etapa: 0, quando: '15/05 15:20', obs: '' }
-]
+function findDelivery(code) {
+var list = deliveriesStore.get() || [];
+for (var i = 0; i < list.length; i++) {
+if (list[i].code.toUpperCase() === String(code).trim().toUpperCase()) return list[i];
 }
-];
-
-function loadData() {
-try {
-var raw = localStorage.getItem(STORE_KEY);
-if (!raw) return JSON.parse(JSON.stringify(defaultData));
-var parsed = JSON.parse(raw);
-if (!Array.isArray(parsed)) return JSON.parse(JSON.stringify(defaultData));
-return parsed;
-} catch (e) {
-return JSON.parse(JSON.stringify(defaultData));
-}
-}
-function saveData(list) {
-try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); } catch (e) {}
-}
-var data = loadData();
-
-function isLogged() {
-try { return localStorage.getItem(SESSION_KEY) === 'ok'; } catch (e) { return false; }
-}
-function setLogged(v) {
-try {
-if (v) localStorage.setItem(SESSION_KEY, 'ok');
-else localStorage.removeItem(SESSION_KEY);
-} catch (e) {}
-}
-
-function findByCode(code) {
-var c = normCode(code);
-for (var i = 0; i < data.length; i++) if (data[i].codigo === c) return data[i];
 return null;
 }
 
-function renderTrack(code) {
-var box = document.getElementById('trackResult');
-box.replaceChildren();
-var c = normCode(code);
-if (!c) {
-var hint = el('div', 'card-float');
-hint.appendChild(el('p', 'empty-msg', 'Digite um código para ver a linha do tempo da entrega.'));
-box.appendChild(hint);
-return;
-}
-var item = findByCode(c);
-if (!item) {
-var nf = el('div', 'not-found');
-nf.appendChild(el('h3', 'section-title', 'Código não encontrado'));
-nf.appendChild(el('p', 'muted-sm', 'Código não encontrado. Confira o código enviado pelo Bruno no WhatsApp.'));
-box.appendChild(nf);
-return;
-}
+function renderResult(d) {
+var resultBox = document.getElementById("resultBox");
+var notFound = document.getElementById("notFound");
+notFound.hidden = true;
+resultBox.hidden = false;
 
-var grid = el('div', 'grid-2');
-grid.style.marginTop = '0';
+document.getElementById("resStatus").textContent = STEPS[d.stage];
 
-var left = el('div', 'card-float');
-var head = el('div', 'row-wrap space-between');
-var titleBox = el('div');
-titleBox.appendChild(el('p', 'helper', 'Código de rastreio'));
-titleBox.appendChild(el('h2', 'section-title', item.codigo));
-head.appendChild(titleBox);
-var stLabel = STAGES[item.etapa].label;
-var badgeCls = item.etapa === 3 ? 'badge-pill badge-ok' : 'badge-pill badge-mustard';
-head.appendChild(el('span', badgeCls, stLabel));
-left.appendChild(head);
-
-var ul = el('ol', 'timeline');
-ul.setAttribute('aria-label', 'Linha do tempo da entrega');
-STAGES.forEach(function (st, idx) {
-var li = el('li');
-var cls = idx < item.etapa ? 'done' : (idx === item.etapa ? 'current' : '');
-if (cls) li.className = cls;
-var dot = el('span', 'step-dot');
-dot.textContent = idx < item.etapa || (idx === item.etapa && item.etapa === 3) ? '✓' : (idx === item.etapa ? '•' : '');
-li.appendChild(dot);
-var hist = item.historico.filter(function (h) { return h.etapa === idx; })[0];
-var title = el('p', 'step-title' + (idx > item.etapa ? ' pending-text' : ''), st.label);
-li.appendChild(title);
-if (hist) {
-li.appendChild(el('p', 'step-meta', hist.quando));
-if (hist.obs) li.appendChild(el('span', 'step-note', hist.obs));
+var tl = document.getElementById("timeline");
+tl.replaceChildren();
+STEPS.forEach(function (label, i) {
+var cls = i < d.stage ? "done" : (i === d.stage ? "current" : "pending");
+var li = el("li", "step " + cls);
+var icon = el("div", "step-icon");
+icon.setAttribute("aria-hidden", "true");
+if (cls === "done") {
+icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 } else {
-li.appendChild(el('p', 'step-meta pending-text', 'Pendente'));
+icon.textContent = String(i + 1);
 }
-ul.appendChild(li);
-});
-left.appendChild(ul);
-
-var right = el('div', 'stack-gap');
-var card = el('div', 'card-float');
-card.appendChild(el('h3', 'section-title', 'Dados da entrega'));
-card.appendChild(el('p', 'muted-sm', 'Informações registradas no momento da coleta.'));
-var info = el('div', 'info-grid');
-var fields = [
-['Destinatário', item.destinatario],
-['Bairro / endereço', item.endereco],
-['Cidade', item.cidade],
-['Volume', item.volume]
-];
-fields.forEach(function (f) {
-var w = el('div');
-w.appendChild(el('div', 'lbl', f[0]));
-w.appendChild(el('div', 'val', f[1]));
-info.appendChild(w);
-});
-card.appendChild(info);
-right.appendChild(card);
-
-var eta = el('div', 'hero-eta');
-eta.appendChild(el('div', 'lbl', 'Previsão de entrega'));
-eta.appendChild(el('p', 'big', item.previsao));
-eta.appendChild(el('p', 'helper', item.etapa === 3 ? 'Entrega concluída com sucesso.' : 'Atualizamos esta previsão sempre que houver mudança de etapa.'));
-right.appendChild(eta);
-
-var actions = el('div', 'card-float');
-actions.appendChild(el('h3', 'section-title', 'Precisa de ajuda?'));
-actions.appendChild(el('p', 'muted-sm', 'Mande uma mensagem com o código para agilizar o atendimento.'));
-var wa = el('a', 'btn-whats', 'Falar com o Bruno no WhatsApp');
-wa.href = 'https://wa.me/5519978049090?text=' + encodeURIComponent('Olá Bruno, quero saber da entrega ' + item.codigo);
-wa.target = '_blank';
-wa.rel = 'noopener';
-actions.appendChild(wa);
-var copyBtn = el('button', 'btn-soft mt-16', 'Copiar código');
-copyBtn.type = 'button';
-copyBtn.style.marginTop = '12px';
-copyBtn.addEventListener('click', function () {
-copyText(item.codigo);
-window.skipUI.toast('Código ' + item.codigo + ' copiado!', { type: 'success' });
-});
-actions.appendChild(copyBtn);
-right.appendChild(actions);
-
-grid.appendChild(left);
-grid.appendChild(right);
-box.appendChild(grid);
-}
-
-function copyText(txt) {
-if (navigator.clipboard && navigator.clipboard.writeText) {
-navigator.clipboard.writeText(txt).catch(function () { fallbackCopy(txt); });
+var body = el("div");
+body.appendChild(el("p", "step-title", label));
+var h = d.history.filter(function (x) { return x.label === label; })[0];
+if (h) {
+body.appendChild(el("p", "step-meta", h.date + " às " + h.time));
+body.appendChild(el("p", "step-note", h.note));
 } else {
-fallbackCopy(txt);
+body.appendChild(el("p", "step-meta", "Aguardando"));
 }
-}
-function fallbackCopy(txt) {
-var ta = document.createElement('textarea');
-ta.value = txt;
-document.body.appendChild(ta);
-ta.select();
-try { document.execCommand('copy'); } catch (e) {}
-document.body.removeChild(ta);
-}
+li.appendChild(icon);
+li.appendChild(body);
+tl.appendChild(li);
+});
 
-function trackUrl(code) {
-return window.location.origin + window.location.pathname + '?codigo=' + encodeURIComponent(code);
-}
-
-function renderPublicKpis() {
-var box = document.getElementById('publicKpis');
-box.replaceChildren();
-var total = data.length;
-var done = data.filter(function (d) { return d.etapa === 3; }).length;
-var route = data.filter(function (d) { return d.etapa >= 1 && d.etapa < 3; }).length;
-var kpis = [
-['Entregas no sistema', total, 'Cadastradas hoje'],
-['Concluídas', done, 'Entregues com sucesso'],
-['Em andamento', route, 'Em rota ou aguardando'],
-['Raio de atendimento', '300 km', 'Indaiatuba e região']
+var grid = document.getElementById("detailsGrid");
+grid.replaceChildren();
+var items = [
+["Destinatário", d.destinatario, false],
+["Código", d.code, false, true],
+["Endereço", d.endereco, false],
+["Cidade", d.cidade, false],
+["Volume", d.volume, false],
+["Previsão", fmtDate(d.previsao), false]
 ];
-kpis.forEach(function (k) {
-var b = el('div', 'kpi-box');
-b.appendChild(el('div', 'n', String(k[1])));
-b.appendChild(el('div', 'l', k[0]));
-b.appendChild(el('div', 'c', k[2]));
-box.appendChild(b);
-});
-}
-
-function renderAdminKpis() {
-var box = document.getElementById('adminKpis');
-box.replaceChildren();
-var coletado = data.filter(function (d) { return d.etapa === 0; }).length;
-var emRota = data.filter(function (d) { return d.etapa === 1 || d.etapa === 2; }).length;
-var entregues = data.filter(function (d) { return d.etapa === 3; }).length;
-var kpis = [
-['Total cadastradas', data.length, 'Entregas registradas'],
-['Coletadas', coletado, 'Aguardando saída'],
-['Em trânsito', emRota, 'Na rua agora'],
-['Entregues', entregues, 'Concluídas']
-];
-kpis.forEach(function (k) {
-var b = el('div', 'kpi-box');
-b.appendChild(el('div', 'n', String(k[1])));
-b.appendChild(el('div', 'l', k[0]));
-b.appendChild(el('div', 'c', k[2]));
-box.appendChild(b);
-});
-var badge = document.getElementById('activeCountBadge');
-badge.textContent = emRota + ' em andamento';
-}
-
-function advanceStage(item, idx, obs) {
-item.etapa = idx;
-item.observacao = obs || item.observacao || '';
-item.historico.push({ etapa: idx, quando: nowStamp(), obs: obs || '' });
-saveData(data);
-}
-
-function renderAdminList(filter) {
-var list = document.getElementById('deliveryList');
-list.replaceChildren();
-var q = (filter || '').trim().toLowerCase();
-var items = data.filter(function (d) {
-if (!q) return true;
-return d.codigo.toLowerCase().indexOf(q) >= 0 ||
-d.destinatario.toLowerCase().indexOf(q) >= 0 ||
-d.endereco.toLowerCase().indexOf(q) >= 0;
-});
-if (!items.length) {
-list.appendChild(el('p', 'empty-msg', 'Nenhuma entrega encontrada. Ajuste a busca ou cadastre uma nova entrega.'));
-return;
-}
-items.forEach(function (item) {
-var wrap = el('div', 'delivery-item');
-var head = el('div', 'delivery-head');
-var left = el('div');
-left.appendChild(el('span', 'delivery-code', item.codigo));
-left.appendChild(el('p', 'step-title', item.destinatario));
-left.appendChild(el('p', 'step-meta', item.endereco + ' · ' + item.cidade + ' · ' + item.volume));
-head.appendChild(left);
-head.appendChild(el('span', item.etapa === 3 ? 'badge-pill badge-ok' : 'badge-pill badge-mustard', STAGES[item.etapa].label));
-wrap.appendChild(head);
-
-var obsRow = el('div', 'row-wrap', null);
-obsRow.style.marginTop = '10px';
-var obsInput = el('input', 'input-mini');
-obsInput.type = 'text';
-obsInput.placeholder = 'Observação (ex.: cliente ausente, reagendado)';
-obsInput.value = item.observacao || '';
-obsInput.setAttribute('aria-label', 'Observação da entrega ' + item.codigo);
-obsInput.style.flex = '1';
-obsInput.style.minWidth = '220px';
-obsRow.appendChild(obsInput);
-var saveObs = el('button', 'btn-soft', 'Salvar observação');
-saveObs.type = 'button';
-saveObs.addEventListener('click', function () {
-item.observacao = obsInput.value.trim();
-saveData(data);
-window.skipUI.toast('Observação salva para ' + item.codigo + '.', { type: 'success' });
-renderAll();
-});
-obsRow.appendChild(saveObs);
-wrap.appendChild(obsRow);
-
-var btns = el('div', 'step-buttons');
-ADMIN_BUTTONS.forEach(function (b) {
-var btn = el('button', 'btn-soft', b.label);
-btn.type = 'button';
-var done = item.etapa >= b.idx;
-if (done) btn.disabled = true;
-btn.addEventListener('click', function () {
-advanceStage(item, b.idx, obsInput.value.trim());
-window.skipUI.toast(item.codigo + ': ' + STAGES[b.idx].label + ' registrado às ' + nowStamp().split(' ')[1] + '.', { type: 'success' });
-renderAll();
-});
-btns.appendChild(btn);
-});
-var copyLink = el('button', 'btn-soft', 'Copiar link de rastreio');
-copyLink.type = 'button';
-copyLink.addEventListener('click', function () {
-openCopyDialog(item.codigo);
-});
-btns.appendChild(copyLink);
-wrap.appendChild(btns);
-
-list.appendChild(wrap);
-});
-}
-
-function renderDailySummary() {
-var box = document.getElementById('dailySummary');
-box.replaceChildren();
-var last = data.slice().sort(function (a, b) {
-var ha = a.historico[a.historico.length - 1];
-var hb = b.historico[b.historico.length - 1];
-return (hb ? hb.quando : '').localeCompare(ha ? ha.quando : '');
-});
-var head = el('p', 'helper', 'Últimas movimentações registradas');
-box.appendChild(head);
-last.slice(0, 5).forEach(function (item) {
-var row = el('div', 'row-wrap space-between');
-row.style.borderBottom = '1px dashed var(--border)';
-row.style.paddingBottom = '8px';
-var left = el('span', '', item.codigo + ' · ' + item.destinatario);
-left.style.fontWeight = '700';
-row.appendChild(left);
-var last = item.historico[item.historico.length - 1];
-row.appendChild(el('span', 'step-meta', STAGES[item.etapa].label + (last ? ' — ' + last.quando : '')));
-box.appendChild(row);
-});
-}
-
-function renderAll() {
-renderPublicKpis();
-if (isLogged()) {
-renderAdminKpis();
-renderAdminList(document.getElementById('searchAdmin').value);
-renderDailySummary();
-}
-}
-
-var currentCopyCode = '';
-function openCopyDialog(code) {
-currentCopyCode = code;
-var txt = 'Olá! Seu pedido ' + code + ' está sendo acompanhado pela Bruninho Lima Express. Acompanhe pelo link: ' + trackUrl(code);
-document.getElementById('copyText').value = txt;
-document.getElementById('copyDialog').showModal();
-}
-
-function showAdminScreen(logged) {
-document.getElementById('gateCard').classList.toggle('hidden', logged);
-document.getElementById('panelArea').classList.toggle('hidden', !logged);
-document.getElementById('adminArea').classList.remove('hidden');
-if (logged) renderAll();
-}
-
-function openAdmin() {
-var adm = document.getElementById('adminArea');
-adm.classList.remove('hidden');
-showAdminScreen(isLogged());
-adm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function closeAdmin() {
-document.getElementById('adminArea').classList.add('hidden');
-window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-document.getElementById('trackForm').addEventListener('submit', function (e) {
-e.preventDefault();
-var v = document.getElementById('trackInput').value;
-renderTrack(v);
-if (!normCode(v)) window.skipUI.toast('Digite o código de rastreio para continuar.', { type: 'error' });
-});
-
-document.querySelectorAll('[data-sample]').forEach(function (b) {
-b.addEventListener('click', function () {
-var code = b.getAttribute('data-sample');
-document.getElementById('trackInput').value = code;
-renderTrack(code);
-window.skipUI.toast('Exemplo ' + code + ' carregado.');
-});
-});
-
-document.getElementById('btnShareSite').addEventListener('click', function () {
-var url = window.location.origin + window.location.pathname;
-copyText(url);
-window.skipUI.toast('Link do rastreio copiado para compartilhar.', { type: 'success' });
-});
-
-document.getElementById('gateForm').addEventListener('submit', function (e) {
-e.preventDefault();
-var p = document.getElementById('gatePass').value;
-var err = document.getElementById('gateError');
-if (p === PASSWORD) {
-setLogged(true);
-err.classList.add('hidden');
-document.getElementById('gatePass').value = '';
-showAdminScreen(true);
-window.skipUI.toast('Bem-vindo, Bruno! Painel liberado.', { type: 'success' });
+items.forEach(function (it) {
+var box = el("div", "detail-box");
+box.appendChild(el("div", "detail-label", it[0]));
+if (it[3]) {
+var pill = el("span", "code-pill", it[1]);
+box.appendChild(pill);
 } else {
-err.classList.remove('hidden');
-window.skipUI.toast('Senha incorreta.', { type: 'error' });
+box.appendChild(el("p", "detail-value", it[1]));
 }
+grid.appendChild(box);
 });
 
-document.getElementById('btnBackClient').addEventListener('click', closeAdmin);
-document.getElementById('btnOpenAdmin').addEventListener('click', openAdmin);
-
-document.getElementById('btnLogout').addEventListener('click', function () {
-setLogged(false);
-showAdminScreen(false);
-window.skipUI.toast('Você saiu do painel.');
-});
-
-document.querySelectorAll('[data-eta]').forEach(function (b) {
-b.addEventListener('click', function () {
-document.getElementById('fEta').value = b.getAttribute('data-eta');
-});
-});
-
-document.getElementById('newForm').addEventListener('submit', function (e) {
-e.preventDefault();
-var nome = document.getElementById('fName').value.trim();
-var end = document.getElementById('fAddr').value.trim();
-var cidade = document.getElementById('fCity').value.trim();
-var vol = document.getElementById('fVolume').value.trim();
-var eta = document.getElementById('fEta').value.trim();
-if (!nome || !end || !cidade || !vol) {
-window.skipUI.toast('Preencha destinatário, endereço, cidade e volume.', { type: 'error' });
-return;
-}
-var code = genCode(data);
-var item = {
-codigo: code,
-destinatario: nome,
-endereco: end,
-cidade: cidade,
-volume: vol,
-previsao: eta || 'A combinar',
-etapa: 0,
-observacao: '',
-historico: [{ etapa: 0, quando: nowStamp(), obs: '' }]
+var waBtn = document.getElementById("waBtn");
+var msg = "Olá, Bruno! Quero saber sobre a entrega " + d.code + " (" + d.destinatario + ").";
+waBtn.onclick = function () {
+window.open("https://wa.me/5519978049090?text=" + encodeURIComponent(msg), "_blank", "noopener");
 };
-data.unshift(item);
-saveData(data);
-document.getElementById('newForm').reset();
-document.getElementById('fCity').value = 'Indaiatuba';
-window.skipUI.toast('Entrega ' + code + ' criada com status Coletado.', { type: 'success' });
-renderAll();
-openCopyDialog(code);
-});
-
-document.getElementById('btnResetForm').addEventListener('click', function () {
-document.getElementById('newForm').reset();
-document.getElementById('fCity').value = 'Indaiatuba';
-window.skipUI.toast('Campos limpos.');
-});
-
-document.getElementById('searchAdmin').addEventListener('input', function (e) {
-renderAdminList(e.target.value);
-});
-
-document.getElementById('btnCopyLast').addEventListener('click', function () {
-if (!data.length) { window.skipUI.toast('Não há entregas para copiar.', { type: 'error' }); return; }
-openCopyDialog(data[0].codigo);
-});
-
-document.getElementById('btnExportTxt').addEventListener('click', function () {
-var lines = data.map(function (d) {
-return d.codigo + ' | ' + d.destinatario + ' | ' + d.endereco + ', ' + d.cidade + ' | ' + STAGES[d.etapa].label + ' | ' + d.previsao;
-});
-var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-var a = document.createElement('a');
-a.href = URL.createObjectURL(blob);
-a.download = 'entregas-bruninho-lima.txt';
-document.body.appendChild(a);
-a.click();
-setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-window.skipUI.toast('Lista exportada em arquivo de texto.', { type: 'success' });
-});
-
-document.getElementById('btnClearDemo').addEventListener('click', function () {
-data = JSON.parse(JSON.stringify(defaultData));
-saveData(data);
-window.skipUI.toast('Demonstração restaurada com 3 entregas de exemplo.', { type: 'success' });
-renderAll();
-});
-
-document.getElementById('btnCopyDialogOk').addEventListener('click', function () {
-copyText(document.getElementById('copyText').value);
-window.skipUI.toast('Mensagem copiada! Cole no WhatsApp do cliente.', { type: 'success' });
-});
-
-document.getElementById('btnPrintTrack').addEventListener('click', function (e) {
-e.preventDefault();
-window.print();
-});
-
-function readQueryCode() {
-try {
-var p = new URLSearchParams(window.location.search);
-return p.get('codigo') || '';
-} catch (e) { return ''; }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-renderPublicKpis();
-var fromUrl = readQueryCode();
-if (fromUrl) {
-document.getElementById('trackInput').value = normCode(fromUrl);
-renderTrack(fromUrl);
+function showNotFound() {
+document.getElementById("resultBox").hidden = true;
+document.getElementById("notFound").hidden = false;
+}
+
+function runTrack(code) {
+var d = findDelivery(code);
+if (d) {
+renderResult(d);
 } else {
-renderTrack('');
+showNotFound();
 }
-if (isLogged()) {
-document.getElementById('adminArea').classList.remove('hidden');
+}
+
+// Tracking form
+document.getElementById("trackForm").addEventListener("submit", function (e) {
+e.preventDefault();
+var code = document.getElementById("trackCode").value;
+if (!code.trim()) {
+window.skipUI.toast("Digite um código de rastreio para continuar.", { type: "error" });
+showNotFound();
+return;
+}
+runTrack(code);
+});
+
+document.getElementById("shortcutBtn").addEventListener("click", function () {
+document.getElementById("trackCode").value = "BL-1043";
+runTrack("BL-1043");
+});
+
+// Scroll reveal
+var revealEls = document.querySelectorAll(".reveal");
+if ("IntersectionObserver" in window) {
+var io = new IntersectionObserver(function (entries) {
+entries.forEach(function (en) {
+if (en.isIntersecting) { en.target.classList.add("visible"); io.unobserve(en.target); }
+});
+}, { threshold: 0.12 });
+revealEls.forEach(function (n) { io.observe(n); });
+} else {
+revealEls.forEach(function (n) { n.classList.add("visible"); });
+}
+
+// Admin dialog
+var dialog = document.getElementById("adminDialog");
+var sessionStore = window.skipStore("bruninho-admin-session", { auth: false });
+
+function setAdminView() {
+var authed = sessionStore.get().auth === true;
+document.getElementById("loginSection").hidden = authed;
+document.getElementById("panelSection").hidden = !authed;
+if (authed) renderAdmin();
+}
+
+document.getElementById("openAdmin").addEventListener("click", function () {
+document.getElementById("loginError").hidden = true;
+setAdminView();
+dialog.showModal();
+});
+
+document.getElementById("loginBtn").addEventListener("click", function () {
+var pass = document.getElementById("adminPass").value;
+if (pass === ADMIN_PASS) {
+sessionStore.set({ auth: true });
+document.getElementById("adminPass").value = "";
+document.getElementById("loginError").hidden = true;
+setAdminView();
+window.skipUI.toast("Bem-vindo, Bruno! Painel liberado.", { type: "success" });
+} else {
+document.getElementById("loginError").hidden = false;
+window.skipUI.toast("Senha incorreta.", { type: "error" });
 }
 });
+
+document.getElementById("adminPass").addEventListener("keydown", function (e) {
+if (e.key === "Enter") { e.preventDefault(); document.getElementById("loginBtn").click(); }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", function () {
+sessionStore.set({ auth: false });
+setAdminView();
+window.skipUI.toast("Você saiu da Área do Bruno.");
+});
+
+function nextCode() {
+var max = 1042;
+(deliveriesStore.get() || []).forEach(function (d) {
+var n = parseInt(d.code.replace("BL-", ""), 10);
+if (!isNaN(n) && n > max) max = n;
+});
+return "BL-" + (max + 1);
+}
+
+// New delivery form
+document.getElementById("newDeliveryForm").addEventListener("submit", function (e) {
+e.preventDefault();
+var dest = document.getElementById("fDest").value.trim();
+var end = document.getElementById("fBairro").value.trim();
+var vol = document.getElementById("fVolume").value.trim();
+if (!dest || !end || !vol) {
+window.skipUI.toast("Preencha destinatário, endereço e volume.", { type: "error" });
+return;
+}
+var now = new Date();
+var pad = function (n) { return String(n).padStart(2, "0"); };
+var date = pad(now.getDate()) + "/" + pad(now.getMonth() + 1) + "/" + now.getFullYear();
+var time = pad(now.getHours()) + ":" + pad(now.getMinutes());
+var code = nextCode();
+var newDel = {
+code: code,
+destinatario: dest,
+endereco: end,
+cidade: document.getElementById("fCidade").value,
+volume: vol,
+previsao: document.getElementById("fPrev").value,
+stage: 0,
+history: [{ label: "Coletado", date: date, time: time, note: "Coleta registrada pelo Bruno." }]
+};
+deliveriesStore.update(function (list) { return [newDel].concat(list); });
+this.reset();
+renderAdmin();
+window.skipUI.toast("Entrega " + code + " registrada como Coletada.", { type: "success" });
+});
+
+function advanceStage(code, stageIndex, note) {
+deliveriesStore.update(function (list) {
+return list.map(function (d) {
+if (d.code !== code) return d;
+var now = new Date();
+var pad = function (n) { return String(n).padStart(2, "0"); };
+var date = pad(now.getDate()) + "/" + pad(now.getMonth() + 1) + "/" + now.getFullYear();
+var time = pad(now.getHours()) + ":" + pad(now.getMinutes());
+var history = d.history.filter(function (h) { return h.label !== STEPS[stageIndex]; });
+history.push({ label: STEPS[stageIndex], date: date, time: time, note: note || (STEPS[stageIndex] + " registrado pelo Bruno.") });
+return Object.assign({}, d, { stage: stageIndex, history: history });
+});
+});
+}
+
+function renderAdmin() {
+var list = deliveriesStore.get() || [];
+var counts = { c: 0, r: 0, e: 0 };
+list.forEach(function (d) {
+if (d.stage === 3) counts.e++;
+else if (d.stage >= 1) counts.r++;
+else counts.c++;
+});
+document.getElementById("cntColetado").textContent = counts.c + " coletadas";
+document.getElementById("cntRota").textContent = counts.r + " em rota";
+document.getElementById("cntEntregue").textContent = counts.e + " entregues";
+
+var wrap = document.getElementById("deliveryList");
+wrap.replaceChildren();
+list.forEach(function (d) {
+var item = el("div", "delivery-item");
+var row = el("div", "delivery-row");
+var left = el("div");
+left.appendChild(el("strong", "", d.code + " · " + d.destinatario));
+left.appendChild(el("p", "helper", d.endereco + " — " + d.volume));
+row.appendChild(left);
+row.appendChild(el("span", "status-pill", STEPS[d.stage]));
+item.appendChild(row);
+
+var noteLabel = el("label", "mini-label", "Observação");
+noteLabel.setAttribute("for", "note-" + d.code);
+item.appendChild(noteLabel);
+var noteInput = el("input", "input");
+noteInput.id = "note-" + d.code;
+noteInput.type = "text";
+noteInput.placeholder = "Ex.: Entregue na recepção";
+item.appendChild(noteInput);
+
+var actions = el("div", "action-row");
+[1, 2, 3].forEach(function (s) {
+var b = el("button", "btn-small" + (d.stage === s ? " primary" : ""), STEPS[s]);
+b.type = "button";
+b.addEventListener("click", function () {
+var note = document.getElementById("note-" + d.code).value.trim();
+advanceStage(d.code, s, note);
+renderAdmin();
+window.skipUI.toast(d.code + " atualizada: " + STEPS[s] + ".", { type: "success" });
+});
+actions.appendChild(b);
+});
+item.appendChild(actions);
+wrap.appendChild(item);
+});
+
+if (!list.length) {
+wrap.appendChild(el("p", "helper", "Nenhuma entrega registrada ainda."));
+}
+}
+
+// Copy tracking link
+document.getElementById("copyLinkBtn").addEventListener("click", function () {
+var list = deliveriesStore.get() || [];
+var code = list.length ? list[0].code : "BL-1043";
+var url = window.location.origin + window.location.pathname + "?codigo=" + code;
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(url).then(function () {
+window.skipUI.toast("Link de rastreio copiado: " + code, { type: "success" });
+}, function () {
+window.skipUI.toast("Não foi possível copiar. Link: " + url, { type: "error" });
+});
+} else {
+window.skipUI.toast("Link de rastreio: " + url);
+}
+});
+
+// URL param support
+var params = new URLSearchParams(window.location.search);
+var codigo = params.get("codigo");
+if (codigo) {
+document.getElementById("trackCode").value = codigo;
+runTrack(codigo);
+}
 })();
 </script>
 </body>
